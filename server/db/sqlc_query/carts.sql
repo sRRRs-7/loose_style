@@ -9,13 +9,7 @@ INSERT INTO carts (
 SELECT p.* FROM carts AS c
 INNER JOIN users AS u ON c.user_id = u.id
 INNER JOIN products AS p ON c.product_id = p.id
-WHERE c.id = $1;
-
--- name: GetCartItem :one
-SELECT p.* FROM carts AS c
-INNER JOIN users AS u ON c.user_id = u.id
-INNER JOIN products AS p ON c.product_id = p.id
-WHERE c.id = $1;
+WHERE c.user_id = $1;
 
 -- name: DeleteCartItem :exec
 DELETE FROM carts

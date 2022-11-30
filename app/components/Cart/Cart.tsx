@@ -95,6 +95,9 @@ function Cart() {
                             <p>{m.id}</p>
                             <p>{m.brand}</p>
                             <p>{m.product_name}</p>
+                            <p>{m.img}</p>
+                            <p>{m.unit_price}</p>
+                            <p>{m.created_at}</p>
                         </div>
                     ))}
                 </div>

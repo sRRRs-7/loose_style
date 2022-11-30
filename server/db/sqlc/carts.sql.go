@@ -43,11 +43,11 @@ const getAllCartItem = `-- name: GetAllCartItem :many
 SELECT p.id, p.product_name, p.description, p.img, p.unit_price, p.discount, p.stock, p.brand_id, p.category, p.created_at, p.updated_at FROM carts AS c
 INNER JOIN users AS u ON c.user_id = u.id
 INNER JOIN products AS p ON c.product_id = p.id
-WHERE c.id = $1
+WHERE c.user_id = $1
 `
 
-func (q *Queries) GetAllCartItem(ctx context.Context, id int64) ([]*Products, error) {
-	rows, err := q.db.Query(ctx, getAllCartItem, id)
+func (q *Queries) GetAllCartItem(ctx context.Context, userID int64) ([]*Products, error) {
+	rows, err := q.db.Query(ctx, getAllCartItem, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -76,30 +76,4 @@ func (q *Queries) GetAllCartItem(ctx context.Context, id int64) ([]*Products, er
 		return nil, err
 	}
 	return items, nil
-}
-
-const getCartItem = `-- name: GetCartItem :one
-SELECT p.id, p.product_name, p.description, p.img, p.unit_price, p.discount, p.stock, p.brand_id, p.category, p.created_at, p.updated_at FROM carts AS c
-INNER JOIN users AS u ON c.user_id = u.id
-INNER JOIN products AS p ON c.product_id = p.id
-WHERE c.id = $1
-`
-
-func (q *Queries) GetCartItem(ctx context.Context, id int64) (*Products, error) {
-	row := q.db.QueryRow(ctx, getCartItem, id)
-	var i Products
-	err := row.Scan(
-		&i.ID,
-		&i.ProductName,
-		&i.Description,
-		&i.Img,
-		&i.UnitPrice,
-		&i.Discount,
-		&i.Stock,
-		&i.BrandID,
-		&i.Category,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return &i, err
 }

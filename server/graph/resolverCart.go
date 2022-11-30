@@ -49,7 +49,7 @@ func (r *mutationResolver) GetCartItemResolver(ctx context.Context, id int) (*mo
 		return nil, fmt.Errorf("gin context convert error: %v", err)
 	}
 
-	product, err := r.store.GetCartItem(gc, int64(id))
+	product, err := r.store.GetProduct(gc, int64(id))
 	if err != nil {
 		return nil, fmt.Errorf("GetCartItemResolver error : %v", err)
 	}
@@ -69,7 +69,6 @@ func (r *mutationResolver) GetCartItemResolver(ctx context.Context, id int) (*mo
 		CreatedAt: product.CreatedAt,
 		UpdatedAt: product.UpdatedAt,
 	}
-
 
 	return convertProc, nil
 }
@@ -120,18 +119,19 @@ func (r *queryResolver) GetAllCartItemsResolver(ctx context.Context) ([]*model.P
 		return nil, fmt.Errorf("get all cart item error get redis value is nil : %v", err)
 	}
 	// string processing
- 	 s := strings.Split(redisValue.String(), ",")
-	 s = strings.Split(s[1], ":")
-	 userId := s[1]
-	 userId = userId[1:]
-	 userId = userId[:len(userId)-1]
+	s := strings.Split(redisValue.String(), ",")
+	s = strings.Split(s[1], ":")
+	userId := s[1]
+	userId = userId[1:]
+	userId = userId[:len(userId)-1]
 
 	// get user id
 	id, err := r.store.GetUser(gc, userId)
+	if err != nil {
+		return nil, fmt.Errorf("GetUser in all cart error : %v", err)
+	}
 
-	fmt.Println(id)
-	fmt.Println(id)
-
+	// all cart item
 	products, err := r.store.GetAllCartItem(gc, id)
 	if err != nil {
 		return nil, fmt.Errorf("GetCartResolver error : %v", err)
