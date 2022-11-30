@@ -1,0 +1,21 @@
+@import '../../src/styles/base.scss';
+.box {
+    @include base_box(100%, 400px, 0px, 0px);
+    flex: content;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+    background-color: $bg_color;
+}
+
+.text {
+    @include base_text();
+    padding-top: 80px;
+    font-size: 40px;
+}
+
+.sub_text {
+    @include base_text();
+    font-size: 25px;
+}

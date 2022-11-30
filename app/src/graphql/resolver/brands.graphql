@@ -1,0 +1,6 @@
+mutation createBrand($brand: String!) {
+    createBrand(brand: $brand) {
+        is_error
+        message
+    }
+}

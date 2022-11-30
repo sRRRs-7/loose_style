@@ -1,0 +1,53 @@
+@import '../../src/styles/base.scss';
+.box {
+    @include base_box(100% 100% 100% 100%);
+    justify-content: center;
+}
+
+.spinnerBox {
+    @include base_box(100% 100% 100% 100%);
+    justify-content: center;
+    align-items: center;
+    margin: 0px 0px 250px 0px;
+    padding-top: 100px;
+}
+
+.grid_box {
+    display: grid;
+    grid-template-columns: 200px 200px 200px 200px 200px;
+    grid-template-rows: 250px 250px 250px 250px 250px;
+}
+
+.grid_items {
+    padding: 30px;
+    text-align: center;
+}
+
+.grid_items:hover {
+    scale: 120%;
+    cursor: pointer;
+}
+
+.top {
+    @include base_box(100% 100% 100% 100%);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.topIcon {
+    color: $text_color;
+    font-size: 50px;
+    margin-top: 50px;
+}
+
+.topIcon:hover {
+    @include base_select();
+}
+
+.text {
+    @include base_text();
+    margin: 0px 0px 0px 50px;
+    font-size: 40px;
+}

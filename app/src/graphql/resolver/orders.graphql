@@ -1,0 +1,32 @@
+mutation createOrder($user_id: String!, $product_id: Int!, $quantity: Int!, $postage: Int!, $price: Int!, $status: Boolean!) {
+    createOrder(user_id: $user_id, product_id: $product_id, quantity: $quantity, postage: $postage, price: $price, status: $status) {
+        is_error
+        message
+    }
+}
+
+query getAllOrders($user_id: String!) {
+    getAllOrders(user_id: $user_id) {
+        id
+        user_id
+        product_id
+        quantity
+        postage
+        price
+        status
+        created_at
+    }
+}
+
+query getOrder($user_id: String!, $product_id: Int!) {
+    getOrder(user_id: $user_id, product_id: $product_id) {
+        id
+        user_id
+        product_id
+        quantity
+        postage
+        price
+        status
+        created_at
+    }
+}

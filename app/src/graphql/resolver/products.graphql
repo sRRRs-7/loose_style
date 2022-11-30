@@ -1,0 +1,85 @@
+mutation createProduct(
+    $product_name: String!
+    $description: String!
+    $img: String!
+    $unit_price: Int!
+    $discount: Float!
+    $stock: Int!
+    $brand: Int!
+    $category: Int!
+) {
+    createProducts(
+        product_name: $product_name
+        description: $description
+        img: $img
+        unit_price: $unit_price
+        discount: $discount
+        stock: $stock
+        brand: $brand
+        category: $category
+    ) {
+        id
+        is_error
+        message
+    }
+}
+
+mutation getProduct($product_id: Int!) {
+    getProduct(product_id: $product_id) {
+        id
+        product_name
+        description
+        img
+        unit_price
+        discount
+        stock
+        brand
+        category
+        created_at
+    }
+}
+
+mutation getAllProductByCategory($category: String!, $first: Int!, $skip: Int!) {
+    getAllProductsByCategory(category: $category, first: $first, skip: $skip) {
+        id
+        product_name
+        description
+        img
+        unit_price
+        discount
+        stock
+        brand
+        category
+        created_at
+    }
+}
+
+mutation getAllProductsByKeyword($keyword: String!, $sortBy: SortBy!, $first: Int!, $skip: Int!) {
+    getAllProductsByKeyword(keyword: $keyword, sortBy: $sortBy, first: $first, skip: $skip) {
+        id
+        product_name
+        description
+        img
+        unit_price
+        discount
+        stock
+        brand
+        category
+        created_at
+    }
+}
+
+query getAllProducts($first: Int!, $skip: Int!) {
+    getAllProducts(first: $first, skip: $skip) {
+        id
+        product_name
+        description
+        img
+        unit_price
+        discount
+        stock
+        brand
+        category
+        created_at
+    }
+}

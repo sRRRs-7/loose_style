@@ -1,0 +1,36 @@
+mutation createCart($user_id: Int!, $product_id: Int!) {
+    createCart(user_id: $user_id, product_id: $product_id) {
+        is_error
+        message
+    }
+}
+
+mutation getCartItem($id: Int!) {
+    getCartItem(id: $id) {
+        id
+        product_name
+        description
+        img
+        unit_price
+        discount
+        stock
+        brand
+        category
+        created_at
+    }
+}
+
+query getAllCartItems {
+    getAllCartItems {
+        id
+        product_name
+        description
+        img
+        unit_price
+        discount
+        stock
+        brand
+        category
+        created_at
+    }
+}

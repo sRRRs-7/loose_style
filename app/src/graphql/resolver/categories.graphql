@@ -1,0 +1,6 @@
+mutation createCategory($category: String!) {
+    createCategory(category: $category) {
+        is_error
+        message
+    }
+}

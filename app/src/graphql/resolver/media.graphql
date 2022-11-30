@@ -1,0 +1,23 @@
+mutation createMedia($title: String!, $contents: String!, $img: String!) {
+    createMedia(title: $title, contents: $contents, img: $img) {
+        is_error
+        message
+    }
+}
+
+mutation updateMedia($id: ID!, $title: String!, $contents: String!, $img: String!) {
+    updateMedia(id: $id, title: $title, contents: $contents, img: $img) {
+        is_error
+        message
+    }
+}
+
+query getAllMedia($first: Int!, $skip: Int!) {
+    getAllMedia(first: $first, skip: $skip) {
+        id
+        title
+        contents
+        img
+        created_at
+    }
+}

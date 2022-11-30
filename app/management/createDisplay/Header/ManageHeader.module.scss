@@ -1,0 +1,20 @@
+@import '../../../src/styles/base.scss';
+.box {
+    @include base_box(100%, 70px, 0px, 10px 100px 10px 0px);
+    justify-items: center;
+    align-items: center;
+    position: fixed;
+    background-color: $bg_color;
+}
+
+.title_box {
+    @include base_box(100%, 100%, 0px, 10px);
+    justify-content: center;
+    align-items: center;
+}
+
+.text {
+    @include base_text();
+    margin: 0px 0px 0px 50px;
+    font-size: 40px;
+}

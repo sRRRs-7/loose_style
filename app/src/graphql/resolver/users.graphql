@@ -1,0 +1,61 @@
+mutation createUser(
+    $user_id: String!
+    $password: String!
+    $username: String!
+    $email: String!
+    $sex: String!
+    $date_of_birth: String!
+    $destination_family_name: String!
+    $destination_first_name: String!
+    $postcode: Int!
+    $prefecture_code: String!
+    $city: String!
+    $street: String!
+    $building: String!
+    $phone: String!
+) {
+    createUser(
+        user_id: $user_id
+        password: $password
+        username: $username
+        email: $email
+        sex: $sex
+        date_of_birth: $date_of_birth
+        destination_family_name: $destination_family_name
+        destination_first_name: $destination_first_name
+        postcode: $postcode
+        prefecture_code: $prefecture_code
+        city: $city
+        street: $street
+        building: $building
+        phone: $phone
+    ) {
+        is_error
+        message
+    }
+}
+
+mutation loginUser($user_id: String!, $password: String!) {
+    loginUser(user_id: $user_id, password: $password)
+}
+
+query getUserList($first: Int!, $skip: Int!) {
+    getUserList(first: $first, skip: $skip) {
+        id
+        user_id
+        password
+        username
+        email
+        sex
+        date_of_birth
+        destination_family_name
+        destination_first_name
+        postcode
+        prefecture_code
+        city
+        street
+        building
+        phone
+        created_at
+    }
+}

@@ -1,0 +1,3 @@
+mutation createToken($user_id: String!) {
+    createToken(user_id: $user_id)
+}
