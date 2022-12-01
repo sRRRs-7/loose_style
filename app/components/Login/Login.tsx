@@ -1,4 +1,4 @@
-import { pathState } from '@/recoil/atom';
+import { pathState } from 'recoil/atom';
 import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -10,15 +10,13 @@ import {
     useLoginUserMutation,
 } from '../../src/graphql/types/graphql';
 import { tokenClient, option, headers } from '@/graphql/client/client';
-import { parseCookies, setCookie, destroyCookie } from 'nookies';
-import nookies from 'nookies';
+import { GetCookie, SetCookie } from 'utils/cookie';
 
 function Login() {
     const [__, setPath] = useRecoilState<string>(pathState);
     const [err, setErr] = useState<boolean>(false);
     const [userId, setUserId] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-
     // get cookie
     const [token, setToken] = useState<string>('');
 
@@ -55,12 +53,7 @@ function Login() {
                         .mutateAsync(tokenVariable, option)
                         .then((res) => {
                             setToken(res.createToken);
-                            setCookie(null, `${process.env.NEXT_PUBLIC_COOKIE_KEY}`, res.createToken, {
-                                domain: 'localhost',
-                                maxAge: 24 * 60 * 60,
-                                path: '/',
-                                secure: false,
-                            });
+                            SetCookie(res.createToken);
                         })
                         .catch((res) => {
                             setErr(true);
@@ -75,8 +68,8 @@ function Login() {
     useEffect(() => {
         // client side get cookie
         if (typeof window != undefined) {
-            const cookie = nookies.get(null, `${process.env.NEXT_PUBLIC_COOKIE_KEY}`);
-            setToken(cookie[process.env.NEXT_PUBLIC_COOKIE_KEY!]);
+            const cookie = GetCookie(); // utils function
+            setToken(cookie as string);
         }
 
         setPath(router.pathname);

@@ -1,4 +1,4 @@
-import { adminState } from '@/recoil/atom';
+import { adminState } from 'recoil/atom';
 import Footer from 'components/Footer/Footer';
 import ManageHeader from 'management/createDisplay/Header/ManageHeader';
 import React from 'react';

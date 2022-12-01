@@ -1,14 +1,14 @@
 import { GraphQLClient } from 'graphql-request';
-import nookie from 'nookies';
+import { GetCookie } from 'utils/cookie';
 
-// react_query parameter
-export const client = new GraphQLClient(`${process.env.NEXT_PUBLIC_END_POINT}`);
-export const adminClient = new GraphQLClient(`${process.env.NEXT_PUBLIC_ADMIN_END_POINT}`);
-export const tokenClient = new GraphQLClient(`${process.env.NEXT_PUBLIC_TOKEN_END_POINT}`);
+// react_query parameter  -> api middleware branch
+export const tokenClient = new GraphQLClient(`${process.env.NEXT_PUBLIC_TOKEN_END_POINT}`); // create token client
+export const client = new GraphQLClient(`${process.env.NEXT_PUBLIC_END_POINT}`); // users client
+export const adminClient = new GraphQLClient(`${process.env.NEXT_PUBLIC_ADMIN_END_POINT}`); // manage client
 
-export const token = nookie.get(null, `${process.env.NEXT_PUBLIC_COOKIE_KEY}`);
+export const token = GetCookie();
 export const headers = {
-    authorization: `Bearer ${token[process.env.NEXT_PUBLIC_COOKIE_KEY!]}`,
+    authorization: `Bearer ${token}`,
 };
 
 export const option = {

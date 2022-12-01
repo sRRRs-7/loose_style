@@ -25,8 +25,8 @@ func NewRedis() *redis.Client {
 }
 
 // use login cookie hashToken == redis key
-func NewSession(gc *gin.Context, cookieKey string, userID string, info []byte, redisExpired time.Duration, cookieExpired int) error {
-	hashToken, err := cryptography.HashPassword(userID)
+func NewSession(gc *gin.Context, cookieKey string, accessToken string, info []byte, redisExpired time.Duration, cookieExpired int) error {
+	hashToken, err := cryptography.HashPassword(accessToken)
 	if err != nil {
 		return fmt.Errorf("new session error cannot convert hash token: %v", err)
 	}
@@ -34,6 +34,20 @@ func NewSession(gc *gin.Context, cookieKey string, userID string, info []byte, r
 	rClient.Set(gc, hashToken, info, redisExpired)
 	// set cookie
 	gc.SetCookie(cookieKey, hashToken, cookieExpired, "/", "localhost", false, true)
+
+	return nil
+}
+
+// administrator session
+func NewAdminSession(gc *gin.Context, cookieKey string, accessToken string, info []byte, redisExpired time.Duration, cookieExpired int) error {
+	hashToken, err := cryptography.HashPassword(accessToken)
+	if err != nil {
+		return fmt.Errorf("new session error cannot convert hash token: %v", err)
+	}
+	// set redis
+	rClient.Set(gc, hashToken, info, redisExpired)
+	// set cookie
+	gc.SetCookie(cookieKey, hashToken, cookieExpired, "/manage", "localhost", false, true)
 
 	return nil
 }

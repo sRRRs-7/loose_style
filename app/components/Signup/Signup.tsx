@@ -1,4 +1,4 @@
-import { pathState } from '@/recoil/atom';
+import { pathState } from 'recoil/atom';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './Signup.module.scss';

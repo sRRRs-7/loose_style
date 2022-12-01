@@ -98,7 +98,7 @@ func (r *Resolver) DeleteCartResolver(ctx context.Context, id int) (*model.Mutat
 
 // query
 
-func (r *queryResolver) GetAllCartItemsResolver(ctx context.Context) ([]*model.Product, error) {
+func (r *queryResolver) GetAllCartItemsResolver(ctx context.Context, first, skip int) ([]*model.Product, error) {
 	gc, err := GinContextFromContext(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("gin context convert error: %v", err)
@@ -131,8 +131,14 @@ func (r *queryResolver) GetAllCartItemsResolver(ctx context.Context) ([]*model.P
 		return nil, fmt.Errorf("GetUser in all cart error : %v", err)
 	}
 
+	args := db.GetAllCartItemParams {
+		UserID: id,
+		Limit: int32(first),
+		Offset: int32(skip),
+	}
+
 	// all cart item
-	products, err := r.store.GetAllCartItem(gc, id)
+	products, err := r.store.GetAllCartItem(gc, args)
 	if err != nil {
 		return nil, fmt.Errorf("GetCartResolver error : %v", err)
 	}

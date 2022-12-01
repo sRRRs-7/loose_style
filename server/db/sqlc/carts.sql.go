@@ -44,10 +44,19 @@ SELECT p.id, p.product_name, p.description, p.img, p.unit_price, p.discount, p.s
 INNER JOIN users AS u ON c.user_id = u.id
 INNER JOIN products AS p ON c.product_id = p.id
 WHERE c.user_id = $1
+ORDER BY created_at DESC
+LIMIT $2
+OFFSET $3
 `
 
-func (q *Queries) GetAllCartItem(ctx context.Context, userID int64) ([]*Products, error) {
-	rows, err := q.db.Query(ctx, getAllCartItem, userID)
+type GetAllCartItemParams struct {
+	UserID int64 `json:"user_id"`
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) GetAllCartItem(ctx context.Context, arg GetAllCartItemParams) ([]*Products, error) {
+	rows, err := q.db.Query(ctx, getAllCartItem, arg.UserID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

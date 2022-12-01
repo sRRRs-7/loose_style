@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Body.module.scss';
 import { useRecoilState } from 'recoil';
-import { categorySearchState, getProductModalState, keywordSearchState, pageState, pathState, productState, topBodyState } from '@/recoil/atom';
+import { categorySearchState, getProductModalState, keywordSearchState, pageState, pathState, productState, topBodyState } from 'recoil/atom';
 import {
     GetAllProductsQueryVariables,
     useGetAllProductsQuery,

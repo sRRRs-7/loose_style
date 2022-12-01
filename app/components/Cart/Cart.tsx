@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import styles from './Cart.module.scss';
 import { useRecoilState } from 'recoil';
-import { cartModalState, pageState, pathState, productState } from '@/recoil/atom';
+import { cartModalState, pageState, pathState, productState } from 'recoil/atom';
 import {
     GetAllCartItemsQueryVariables,
     useGetAllCartItemsQuery,
@@ -9,41 +9,54 @@ import {
     useGetCartItemMutation,
 } from '../../src/graphql/types/graphql';
 import { option, headers, adminClient } from '@/graphql/client/client';
-import nookies from 'nookies';
 import Pagination from 'components/Body/Pagination/Pagination';
 import Modal from 'components/Modal/Modal';
+import { GetCookie, RemoveCookie } from 'utils/cookie';
+import { useRouter } from 'next/router';
 
 function Cart() {
-    const [page, _] = useRecoilState(pageState); // pagination state
-    const [__, setPath] = useRecoilState<string>(pathState);
+    const [_, setPath] = useRecoilState<string>(pathState); // header current state blue text
+    const [page, __] = useRecoilState(pageState); // pagination state
     const [isCateModal, setIsCartModal] = useRecoilState<boolean>(cartModalState);
-    const [product, setProduct] = useRecoilState<any>(productState); // get product modal value
+    const [___, setProduct] = useRecoilState<any>(productState); // get product modal value  -> pass modal
     const [err, setErr] = useState(false);
     const [token, setToken] = useState<string>('');
     const [cartId, setCartId] = useState<number>(0);
     const [isGetCart, setIsGetCart] = useState<boolean>(false);
 
+    const router = useRouter();
+
     // get all cart
-    const getAllVariable: GetAllCartItemsQueryVariables = {};
-    const { data } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, headers);
+    const getAllVariable: GetAllCartItemsQueryVariables = { first: 30, skip: 30 * (page - 1) };
+    const { data, isError } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, headers);
 
     // get a cart mutation
     const getVariable: GetCartItemMutationVariables = { id: cartId };
     const mutation = useGetCartItemMutation(adminClient, option, headers);
 
-    //initial render
-    useEffect(() => {
+    // session timeout -> remove cookie
+    if (isError) {
+        RemoveCookie();
+        router.push('/');
+    }
+
+    // before draw display
+    useLayoutEffect(() => {
         // reload once
         if (window.name != 'reload') {
-            location.reload();
+            window.location.reload();
             window.name = 'reload';
         }
+    }, []);
 
+    //initial render
+    useEffect(() => {
         // get cookie when client render
         if (typeof window != undefined) {
-            const cookie = nookies.get(null, `${process.env.NEXT_PUBLIC_COOKIE_KEY}`);
-            setToken(cookie[process.env.NEXT_PUBLIC_COOKIE_KEY!]);
+            const cookie = GetCookie(); // utils function
+            setToken(cookie as string);
         }
+        setPath('/cart');
     }, [token]);
 
     useEffect(() => {
@@ -95,7 +108,7 @@ function Cart() {
                             <p>{m.id}</p>
                             <p>{m.brand}</p>
                             <p>{m.product_name}</p>
-                            <p>{m.img}</p>
+                            <img src={m.img} alt='product_image' />
                             <p>{m.unit_price}</p>
                             <p>{m.created_at}</p>
                         </div>

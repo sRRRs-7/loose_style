@@ -1,5 +1,5 @@
 import { Product } from '@/graphql/types/graphql';
-import { cartModalState, getProductModalState, productState } from '@/recoil/atom';
+import { cartModalState, getProductModalState, productState } from 'recoil/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './Modal.module.scss';
@@ -32,6 +32,7 @@ function Modal() {
                 <div className={styles.content}>
                     <p>contents</p>
                     <p>{product?.id}</p>
+                    <img src={product?.img} alt='product_image' />
                     <p>{product?.product_name}</p>
                     <p>{product?.description}</p>
                     <p>{product?.unit_price}</p>

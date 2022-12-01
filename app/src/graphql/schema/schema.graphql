@@ -30,7 +30,7 @@ extend type Query {
     # products
     getAllProducts(first: Int!, skip: Int!): [Product!]!
     # cart
-    getAllCartItems: [Product!]!
+    getAllCartItems(first: Int!, skip: Int!): [Product!]!
     # order
     getAllOrders(user_id: String!): [Order!]!
     getOrder(user_id: String!, product_id: Int!): Order!
@@ -88,6 +88,7 @@ extend type Mutation {
     createBrand(brand: String!): MutationResponse!
     createAdminUser(username: String!, password: String!): MutationResponse!
     createToken(user_id: String!): String!
+    createAdminToken(user_id: String!): String!
 }
 
 enum OrderBy {

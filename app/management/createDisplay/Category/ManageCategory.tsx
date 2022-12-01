@@ -1,4 +1,4 @@
-import { createState } from '@/recoil/atom';
+import { createState } from 'recoil/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './ManageCategory.module.scss';

@@ -108,8 +108,8 @@ func GinContextRedisMiddleware(tokenMaker token.Maker, config cfg.Config) gin.Ha
 		c.Set(authorizationHeaderKey, payload)
 
 		// check session
-		id := session.GetSession(c, accessToken)
-		if id == nil {
+		redisValue := session.GetSession(c, accessToken)
+		if redisValue == nil {
 			err := errors.New("redis expired session")
 			fmt.Println("redis expired session")
 			c.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))

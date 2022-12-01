@@ -20,8 +20,8 @@ mutation getCartItem($id: Int!) {
     }
 }
 
-query getAllCartItems {
-    getAllCartItems {
+query getAllCartItems($first: Int!, $skip: Int!) {
+    getAllCartItems(first: $first, skip: $skip) {
         id
         product_name
         description

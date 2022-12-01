@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { keywordSearchState, keywordState, pageState, pathState } from '../../src/recoil/atom';
+import { categoryState, keywordSearchState, keywordState, pageState, pathState } from '../../recoil/atom';
 import styles from './Header.module.scss';
 import ShoppingCartTwoToneIcon from '@mui/icons-material/ShoppingCartTwoTone';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { blue } from '@mui/material/colors';
-import { parseCookies, setCookie, destroyCookie } from 'nookies';
-import nookies from 'nookies';
+import { GetCookie, RemoveCookie } from 'utils/cookie';
 
 function Header() {
-    const [path, setPath] = useRecoilState<string>(pathState);
-    const [_, setPage] = useRecoilState<number>(pageState);
+    const [path, setPath] = useRecoilState<string>(pathState); // header current state blue text
+    const [_, setPage] = useRecoilState<number>(pageState); // pagination state
     const [__, setIsKeywordSearch] = useRecoilState(keywordSearchState);
-    const [keyword, setKeyword] = useRecoilState<string>(keywordState);
+    const [___, setKeyword] = useRecoilState<string>(keywordState);
+    const [____, setCategory] = useRecoilState(categoryState);
     const [value, setValue] = useState<string>('');
-
     // get cookie
     const [token, setToken] = useState<string>('');
 
     const router = useRouter();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         // client side get cookie
         if (typeof window != undefined) {
-            const cookie = nookies.get(null, `${process.env.NEXT_PUBLIC_COOKIE_KEY}`);
-            setToken(cookie[process.env.NEXT_PUBLIC_COOKIE_KEY!]);
+            const cookie = GetCookie(); // utils function
+            setToken(cookie as string);
         }
     }, [token]);
 
@@ -46,6 +45,7 @@ function Header() {
         setKeyword(value);
         setPage(1);
         setValue('');
+        setCategory('');
     }
 
     // click search icon
@@ -54,10 +54,13 @@ function Header() {
         setKeyword(value);
         setPage(1);
         setValue('');
+        setCategory('');
     }
 
     function logoutHandler() {
-        destroyCookie(null, `${process.env.NEXT_PUBLIC_COOKIE_KEY}`);
+        // util function
+        RemoveCookie();
+        // reload
         if (router.pathname == '/') {
             router.reload();
         }
@@ -84,6 +87,7 @@ function Header() {
                     </p>
                 </Link>
             </div>
+
             <div className={styles.input_box}>
                 {(router.pathname == '/' || router.pathname == '/cart') && (
                     <div>

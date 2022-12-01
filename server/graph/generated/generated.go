@@ -87,6 +87,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		CreateAdminToken         func(childComplexity int, userID string) int
 		CreateAdminUser          func(childComplexity int, username string, password string) int
 		CreateBrand              func(childComplexity int, brand string) int
 		CreateCart               func(childComplexity int, userID int, productID int) int
@@ -153,7 +154,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		AllPostsMeta    func(childComplexity int) int
-		GetAllCartItems func(childComplexity int) int
+		GetAllCartItems func(childComplexity int, first int, skip int) int
 		GetAllMedia     func(childComplexity int, first int, skip int) int
 		GetAllOrders    func(childComplexity int, userID string) int
 		GetAllPosts     func(childComplexity int, orderBy *model.OrderBy, first int, skip int) int
@@ -215,6 +216,7 @@ type MutationResolver interface {
 	CreateBrand(ctx context.Context, brand string) (*model.MutationResponse, error)
 	CreateAdminUser(ctx context.Context, username string, password string) (*model.MutationResponse, error)
 	CreateToken(ctx context.Context, userID string) (string, error)
+	CreateAdminToken(ctx context.Context, userID string) (string, error)
 }
 type QueryResolver interface {
 	GetAllPosts(ctx context.Context, orderBy *model.OrderBy, first int, skip int) ([]*model.Post, error)
@@ -222,7 +224,7 @@ type QueryResolver interface {
 	GetAllMedia(ctx context.Context, first int, skip int) ([]*model.Media, error)
 	GetUserList(ctx context.Context, first int, skip int) ([]*model.User, error)
 	GetAllProducts(ctx context.Context, first int, skip int) ([]*model.Product, error)
-	GetAllCartItems(ctx context.Context) ([]*model.Product, error)
+	GetAllCartItems(ctx context.Context, first int, skip int) ([]*model.Product, error)
 	GetAllOrders(ctx context.Context, userID string) ([]*model.Order, error)
 	GetOrder(ctx context.Context, userID string, productID int) (*model.Order, error)
 }
@@ -416,6 +418,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Media.UpdatedAt(childComplexity), true
+
+	case "Mutation.createAdminToken":
+		if e.complexity.Mutation.CreateAdminToken == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createAdminToken_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateAdminToken(childComplexity, args["user_id"].(string)), true
 
 	case "Mutation.createAdminUser":
 		if e.complexity.Mutation.CreateAdminUser == nil {
@@ -853,7 +867,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.GetAllCartItems(childComplexity), true
+		args, err := ec.field_Query_getAllCartItems_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetAllCartItems(childComplexity, args["first"].(int), args["skip"].(int)), true
 
 	case "Query.getAllMedia":
 		if e.complexity.Query.GetAllMedia == nil {
@@ -1189,7 +1208,7 @@ extend type Query {
   # products
   getAllProducts(first: Int!, skip: Int!): [Product!]!
   # cart
-  getAllCartItems: [Product!]!
+  getAllCartItems(first: Int!, skip: Int!): [Product!]!
   # order
   getAllOrders(user_id: String!): [Order!]!
   getOrder(user_id: String!, product_id: Int!): Order!
@@ -1272,6 +1291,7 @@ extend type Mutation {
   createBrand(brand: String!): MutationResponse!
   createAdminUser(username: String!, password: String!): MutationResponse!
   createToken(user_id: String!): String!
+  createAdminToken(user_id: String!): String!
 }
 
 enum OrderBy {
@@ -1416,6 +1436,21 @@ func (ec *executionContext) dir_validation_args(ctx context.Context, rawArgs map
 		}
 	}
 	args["format"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createAdminToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["user_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user_id"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["user_id"] = arg0
 	return args, nil
 }
 
@@ -2085,6 +2120,30 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getAllCartItems_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["skip"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("skip"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["skip"] = arg1
 	return args, nil
 }
 
@@ -4615,6 +4674,61 @@ func (ec *executionContext) fieldContext_Mutation_createToken(ctx context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createAdminToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createAdminToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateAdminToken(rctx, fc.Args["user_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createAdminToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createAdminToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _MutationResponse_id(ctx context.Context, field graphql.CollectedField, obj *model.MutationResponse) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_MutationResponse_id(ctx, field)
 	if err != nil {
@@ -6215,7 +6329,7 @@ func (ec *executionContext) _Query_getAllCartItems(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetAllCartItems(rctx)
+		return ec.resolvers.Query().GetAllCartItems(rctx, fc.Args["first"].(int), fc.Args["skip"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6265,6 +6379,17 @@ func (ec *executionContext) fieldContext_Query_getAllCartItems(ctx context.Conte
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_getAllCartItems_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -9881,6 +10006,15 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createToken(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createAdminToken":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createAdminToken(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {

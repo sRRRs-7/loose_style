@@ -23,7 +23,7 @@ type Querier interface {
 	DeleteProduct(ctx context.Context, id int64) error
 	DeleteUser(ctx context.Context, userID string) error
 	GetAdminUser(ctx context.Context, arg GetAdminUserParams) (*Adminuser, error)
-	GetAllCartItem(ctx context.Context, userID int64) ([]*Products, error)
+	GetAllCartItem(ctx context.Context, arg GetAllCartItemParams) ([]*Products, error)
 	GetCategories(ctx context.Context, category string) (*Categories, error)
 	GetMedia(ctx context.Context, id int64) (*Media, error)
 	GetOrder(ctx context.Context, arg GetOrderParams) (*Orders, error)

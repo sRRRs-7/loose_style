@@ -1,16 +1,16 @@
-import { adminState } from '@/recoil/atom';
-import React, { useEffect, useState } from 'react';
+import { adminState, tokenState } from 'recoil/atom';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './ManageLogin.module.scss';
 import {
     GetAdminMutationVariables,
     useGetAdminMutation,
-    useCreateTokenMutation,
-    CreateTokenMutationVariables,
+    CreateAdminTokenMutationVariables,
+    useCreateAdminTokenMutation,
 } from '../../../src/graphql/types/graphql';
 import { tokenClient, option, headers } from '../../../src/graphql/client/client';
-import { parseCookies, setCookie, destroyCookie } from 'nookies';
 import nookies from 'nookies';
+import { GetAdminCookie, GetCookie, SetAdminCookie } from 'utils/cookie';
 
 function ManageLogin() {
     const [_, setAdmin] = useRecoilState(adminState);
@@ -20,16 +20,16 @@ function ManageLogin() {
     const [auth, setAuth] = useState<boolean>(false);
 
     // get cookie
-    const cookie = nookies.get(null, `${process.env.NEXT_PUBLIC_COOKIE_KEY}`);
-    const [token, setToken] = useState<string>(cookie[`${process.env.NEXT_PUBLIC_COOKIE_KEY}`]);
+    const cookie = GetAdminCookie(); // utils function
+    const [__, setToken] = useRecoilState<boolean>(tokenState);
 
     // admin mutation
     const adminVariable: GetAdminMutationVariables = { username: username, password: password };
     const adminMutation = useGetAdminMutation(tokenClient, option, headers);
 
     // token mutation
-    const tokenVariable: CreateTokenMutationVariables = {};
-    const tokenMutation = useCreateTokenMutation(tokenClient, option, headers);
+    const tokenVariable: CreateAdminTokenMutationVariables = { user_id: username };
+    const tokenMutation = useCreateAdminTokenMutation(tokenClient, option, headers);
 
     function changeHandlerId(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;
@@ -56,13 +56,8 @@ function ManageLogin() {
                     tokenMutation
                         .mutateAsync(tokenVariable, option)
                         .then((res) => {
-                            setToken(res.createToken);
-                            setCookie(null, `${process.env.NEXT_PUBLIC_COOKIE_KEY}`, res.createToken, {
-                                domain: 'localhost',
-                                maxAge: 24 * 60 * 60,
-                                path: '/',
-                                secure: false,
-                            });
+                            setToken(true);
+                            SetAdminCookie(res.createAdminToken); // utils function
                         })
                         .catch((res) => {
                             setErr(true);
@@ -74,12 +69,10 @@ function ManageLogin() {
                 setErr(true);
                 return;
             });
-
-        setErr(false);
     }
 
     useEffect(() => {
-        if (token) {
+        if (cookie) {
             setAdmin(true);
         }
         // set cookie
@@ -88,7 +81,6 @@ function ManageLogin() {
             setUsername('');
             setPassword('');
             setAdmin(true);
-            window.location.reload();
         }
     }, [auth]); // important token dependency
 
@@ -150,6 +142,7 @@ function ManageLogin() {
 
 export default ManageLogin;
 
+// SSR cookie
 export async function getServerSideProps(ctx: any) {
     // Parse
     const cookies = nookies.get(ctx);

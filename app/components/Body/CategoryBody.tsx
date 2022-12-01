@@ -10,7 +10,7 @@ import {
     pathState,
     productState,
     topBodyState,
-} from '@/recoil/atom';
+} from 'recoil/atom';
 import {
     GetProductMutationVariables,
     useGetProductMutation,

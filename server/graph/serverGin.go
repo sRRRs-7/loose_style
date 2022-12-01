@@ -24,11 +24,11 @@ func (r *Resolver) GinRouter(tokenMaker token.Maker) {
 		MaxAge: 5 * time.Second,
 	}))
 
-	// play ground (token get product)
-	playGroundRouter := router.Group("/")
+	// create user token
+	playGroundRouter := router.Group("/") // cannot change
 	playGroundRouter.Use(GinContextToContextMiddleware(r.config))
 	playGroundRouter.Use(dataloaders.DataLoaderMiddleware(r.store))
-	playGroundRouter.POST("query", graphqlHandler(r))
+	playGroundRouter.POST("/query", graphqlHandler(r))
 	playGroundRouter.GET("/query", playgroundHandler())
 
 	// user router query only (login, logout)

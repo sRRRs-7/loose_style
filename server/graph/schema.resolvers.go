@@ -179,6 +179,14 @@ func (r *mutationResolver) CreateToken(ctx context.Context, userID string) (stri
 	return res, nil
 }
 
+func (r *mutationResolver) CreateAdminToken(ctx context.Context, userID string) (string, error) {
+	res, err := r.CreateAdminTokenResolver(ctx, userID)
+	if err != nil {
+		return "", fmt.Errorf("CreateAdminToken error: %v", err)
+	}
+	return res, nil
+}
+
 func (r *queryResolver) GetAllPosts(ctx context.Context, orderBy *model.OrderBy, first int, skip int) ([]*model.Post, error) {
 	res, err := r.GetAllPostsResolver(ctx, orderBy, first, skip)
 	if err != nil {
@@ -219,8 +227,8 @@ func (r *queryResolver) GetAllProducts(ctx context.Context, first int, skip int)
 	return res, nil
 }
 
-func (r *queryResolver) GetAllCartItems(ctx context.Context) ([]*model.Product, error) {
-	res, err := r.GetAllCartItemsResolver(ctx)
+func (r *queryResolver) GetAllCartItems(ctx context.Context, first int, skip int) ([]*model.Product, error) {
+	res, err := r.GetAllCartItemsResolver(ctx, first, skip)
 	if err != nil {
 		return nil, fmt.Errorf("GetCartItem error: %v", err)
 	}

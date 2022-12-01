@@ -1,3 +1,7 @@
 mutation createToken($user_id: String!) {
     createToken(user_id: $user_id)
 }
+
+mutation createAdminToken($user_id: String!) {
+    createAdminToken(user_id: $user_id)
+}

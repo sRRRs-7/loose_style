@@ -3,7 +3,7 @@ import styles from './Paginatioin.module.scss';
 import FirstPageTwoToneIcon from '@mui/icons-material/FirstPageTwoTone';
 import LastPageTwoToneIcon from '@mui/icons-material/LastPageTwoTone';
 import { useRecoilState } from 'recoil';
-import { pageState } from '@/recoil/atom';
+import { pageState } from 'recoil/atom';
 
 function Pagination() {
     const [page, setPage] = useRecoilState(pageState);

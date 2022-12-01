@@ -1,4 +1,4 @@
-import { categorySearchState, categoryState, pageState } from '@/recoil/atom';
+import { categorySearchState, categoryState, pageState } from 'recoil/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './CategoryBar.module.scss';

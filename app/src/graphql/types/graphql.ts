@@ -75,6 +75,7 @@ export type Media = Node & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createAdminToken: Scalars['String'];
   createAdminUser: MutationResponse;
   createBrand: MutationResponse;
   createCart: MutationResponse;
@@ -94,6 +95,11 @@ export type Mutation = {
   loginUser: Scalars['Boolean'];
   updateMedia: MutationResponse;
   updatePost: MutationResponse;
+};
+
+
+export type MutationCreateAdminTokenArgs = {
+  user_id: Scalars['String'];
 };
 
 
@@ -302,6 +308,12 @@ export type Query = {
 };
 
 
+export type QueryGetAllCartItemsArgs = {
+  first: Scalars['Int'];
+  skip: Scalars['Int'];
+};
+
+
 export type QueryGetAllMediaArgs = {
   first: Scalars['Int'];
   skip: Scalars['Int'];
@@ -415,7 +427,10 @@ export type GetCartItemMutationVariables = Exact<{
 
 export type GetCartItemMutation = { __typename?: 'Mutation', getCartItem: { __typename?: 'Product', id: string, product_name: string, description: string, img: string, unit_price: number, discount: number, stock: number, brand: number, category: string, created_at: any } };
 
-export type GetAllCartItemsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllCartItemsQueryVariables = Exact<{
+  first: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
 
 
 export type GetAllCartItemsQuery = { __typename?: 'Query', getAllCartItems: Array<{ __typename?: 'Product', id: string, product_name: string, description: string, img: string, unit_price: number, discount: number, stock: number, brand: number, category: string, created_at: any }> };
@@ -535,6 +550,13 @@ export type CreateTokenMutationVariables = Exact<{
 
 
 export type CreateTokenMutation = { __typename?: 'Mutation', createToken: string };
+
+export type CreateAdminTokenMutationVariables = Exact<{
+  user_id: Scalars['String'];
+}>;
+
+
+export type CreateAdminTokenMutation = { __typename?: 'Mutation', createAdminToken: string };
 
 export type CreateUserMutationVariables = Exact<{
   user_id: Scalars['String'];
@@ -688,8 +710,8 @@ export const useGetCartItemMutation = <
       options
     );
 export const GetAllCartItemsDocument = `
-    query getAllCartItems {
-  getAllCartItems {
+    query getAllCartItems($first: Int!, $skip: Int!) {
+  getAllCartItems(first: $first, skip: $skip) {
     id
     product_name
     description
@@ -708,17 +730,17 @@ export const useGetAllCartItemsQuery = <
       TError = unknown
     >(
       client: GraphQLClient,
-      variables?: GetAllCartItemsQueryVariables,
+      variables: GetAllCartItemsQueryVariables,
       options?: UseQueryOptions<GetAllCartItemsQuery, TError, TData>,
       headers?: RequestInit['headers']
     ) =>
     useQuery<GetAllCartItemsQuery, TError, TData>(
-      variables === undefined ? ['getAllCartItems'] : ['getAllCartItems', variables],
+      ['getAllCartItems', variables],
       fetcher<GetAllCartItemsQuery, GetAllCartItemsQueryVariables>(client, GetAllCartItemsDocument, variables, headers),
       options
     );
 
-useGetAllCartItemsQuery.getKey = (variables?: GetAllCartItemsQueryVariables) => variables === undefined ? ['getAllCartItems'] : ['getAllCartItems', variables];
+useGetAllCartItemsQuery.getKey = (variables: GetAllCartItemsQueryVariables) => ['getAllCartItems', variables];
 ;
 
 export const CreateCategoryDocument = `
@@ -1078,6 +1100,24 @@ export const useCreateTokenMutation = <
     useMutation<CreateTokenMutation, TError, CreateTokenMutationVariables, TContext>(
       ['createToken'],
       (variables?: CreateTokenMutationVariables) => fetcher<CreateTokenMutation, CreateTokenMutationVariables>(client, CreateTokenDocument, variables, headers)(),
+      options
+    );
+export const CreateAdminTokenDocument = `
+    mutation createAdminToken($user_id: String!) {
+  createAdminToken(user_id: $user_id)
+}
+    `;
+export const useCreateAdminTokenMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<CreateAdminTokenMutation, TError, CreateAdminTokenMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<CreateAdminTokenMutation, TError, CreateAdminTokenMutationVariables, TContext>(
+      ['createAdminToken'],
+      (variables?: CreateAdminTokenMutationVariables) => fetcher<CreateAdminTokenMutation, CreateAdminTokenMutationVariables>(client, CreateAdminTokenDocument, variables, headers)(),
       options
     );
 export const CreateUserDocument = `
