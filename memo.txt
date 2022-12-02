@@ -1,6 +1,13 @@
+get all cart
+    -> user id get from redis -> sorted by user id -> SQL distinct count
 
 add cart
-delete cart
+    -> user id (pk) + product id (pk)
+    - user id get from redis
+    - product id get from client side
+
+purchase button function
+    -> payment API stripe
 
 g-gram, morphological analysis
 

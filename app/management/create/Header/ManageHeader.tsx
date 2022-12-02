@@ -1,17 +1,23 @@
 import React, { useLayoutEffect, useState } from 'react';
 import styles from './ManageHeader.module.scss';
 import Link from 'next/link';
-import { RemoveAdminCookie } from 'utils/cookie';
+import { GetAdminCookie, RemoveAdminCookie } from 'utils/cookie';
 import { useRecoilState } from 'recoil';
 import { tokenState } from '../../../recoil/atom';
 
 function ManageHeader() {
-    const [token, _] = useRecoilState<boolean>(tokenState);
+    const [token, setToken] = useRecoilState<boolean>(tokenState);
 
     function logoutHandler() {
         RemoveAdminCookie();
         window.location.reload();
     }
+
+    useLayoutEffect(() => {
+        if (GetAdminCookie() != undefined) {
+            setToken(true);
+        }
+    }, [token]);
 
     return (
         <div className={styles.box}>

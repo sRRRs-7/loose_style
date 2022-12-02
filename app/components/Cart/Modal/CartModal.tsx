@@ -1,18 +1,24 @@
-import { cartIdState, cartModalState, productState } from '../../../recoil/atom';
-import React, { useState } from 'react';
+import { cartIdState, cartModalState, getAllCartState, productState } from '../../../recoil/atom';
+import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './CartModal.module.scss';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
-import { adminClient, headers, option } from '@/graphql/client/client';
+import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
 import { useDeleteCartMutation, GetCartItemMutationVariables } from '@/graphql/types/graphql';
+import { RemoveCookie } from 'utils/cookie';
 
 function CartModal() {
-    const [_, setIsCartModal] = useRecoilState<boolean>(cartModalState); // cart modal state
-    const [product, __] = useRecoilState<any>(productState); // get product modal value
-    const [cartId, ___] = useRecoilState<number>(cartIdState); // receive cart id from top cart page
+    // cart modal state
+    const [_, setIsCartModal] = useRecoilState<boolean>(cartModalState);
+    // get product modal value
+    const [product, __] = useRecoilState<any>(productState);
+    // receive cart id from top cart page
+    const [cartId, ___] = useRecoilState<number>(cartIdState);
+    // get all cart trigger
+    const [____, setIsGetCart] = useRecoilState<boolean>(getAllCartState);
 
     // delete a cart mutation
-    const deleteMutation = useDeleteCartMutation(adminClient, option, headers);
+    const deleteMutation = useDeleteCartMutation(adminClient, option, NewAdminHeader());
 
     function modalCloseHandler() {
         setIsCartModal(false);
@@ -24,10 +30,13 @@ function CartModal() {
         deleteMutation
             .mutateAsync(deleteVariable, option)
             .then((res) => {
-                console.log(res.deleteCart);
+                setIsGetCart(true);
             })
             .catch((err) => {
-                console.log(err.deleteCart);
+                if (err.response.status == 401) {
+                    RemoveCookie;
+                    window.location.href = '/login';
+                }
             });
         window.location.reload();
     }

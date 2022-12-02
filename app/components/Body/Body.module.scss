@@ -32,6 +32,15 @@
     cursor: pointer;
 }
 
+.flex_box {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 48%;
+    font-family: monospace;
+    scale: 150%;
+}
+
 .top {
     @include base_box(100% 100% 100% 100%);
     flex-direction: column;

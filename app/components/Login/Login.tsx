@@ -9,7 +9,7 @@ import {
     useCreateTokenMutation,
     useLoginUserMutation,
 } from '../../src/graphql/types/graphql';
-import { tokenClient, option, headers } from '@/graphql/client/client';
+import { tokenClient, option, NewHeader } from '@/graphql/client/client';
 import { GetCookie, SetCookie } from 'utils/cookie';
 
 function Login() {
@@ -22,11 +22,11 @@ function Login() {
 
     // login mutation
     var variable: LoginUserMutationVariables = { user_id: userId, password: password };
-    const loginMutation = useLoginUserMutation(tokenClient, option, headers);
+    const loginMutation = useLoginUserMutation(tokenClient, option, NewHeader());
 
     // token mutation
     const tokenVariable: CreateTokenMutationVariables = { user_id: userId };
-    const tokenMutation = useCreateTokenMutation(tokenClient, option, headers);
+    const tokenMutation = useCreateTokenMutation(tokenClient, option, NewHeader());
 
     function changeHandlerId(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

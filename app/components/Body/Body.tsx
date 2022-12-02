@@ -3,7 +3,7 @@ import styles from './Body.module.scss';
 import CategoryBar from './CategoryBar/CategoryBar';
 import Pagination from './Pagination/Pagination';
 import { useRecoilState } from 'recoil';
-import { categorySearchState, keywordSearchState, pageState, pathState, topBodyState } from '../../recoil/atom';
+import { categorySearchState, keywordSearchState, pathState, topBodyState } from '../../recoil/atom';
 import KeyboardCapslockTwoToneIcon from '@mui/icons-material/KeyboardCapslockTwoTone';
 import TopBody from './TopBody';
 import CategoryBody from './CategoryBody';
@@ -11,7 +11,6 @@ import KeywordBody from './KeywordBody';
 import Loading from './Loading';
 
 function Body() {
-    const [page, ____] = useRecoilState<number>(pageState);
     const [path, setPath] = useRecoilState<string>(pathState);
     // fetch condition state
     const [isTop, _] = useRecoilState<boolean>(topBodyState); // share top body component

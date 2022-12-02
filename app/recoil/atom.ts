@@ -77,14 +77,14 @@ export const topBodyState = atom<boolean>({
 });
 
 // cart modal state
-export const cartModalState = atom<boolean>({
-    key: 'cartModalState',
+export const tokenState = atom<boolean>({
+    key: 'tokenState',
     default: false,
 });
 
 // cart modal state
-export const tokenState = atom<boolean>({
-    key: 'tokenState',
+export const cartModalState = atom<boolean>({
+    key: 'cartModalState',
     default: false,
 });
 
@@ -92,4 +92,10 @@ export const tokenState = atom<boolean>({
 export const cartIdState = atom<number>({
     key: 'cartIdState',
     default: 0,
+});
+
+// all cart get state
+export const getAllCartState = atom<boolean>({
+    key: 'getAllCartState',
+    default: false,
 });

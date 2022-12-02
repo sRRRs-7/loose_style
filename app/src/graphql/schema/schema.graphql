@@ -79,7 +79,8 @@ extend type Mutation {
     getAllProductsByKeyword(keyword: String!, sortBy: SortBy!, first: Int!, skip: Int!): [Product!]!
     # cart
     getCartItem(id: Int!): Product!
-    createCart(user_id: Int!, product_id: Int!): MutationResponse!
+    createCart(product_id: Int!): MutationResponse!
+    createAdminCart(user_id: Int!, product_id: Int!): MutationResponse!
     deleteCart(id: Int!): MutationResponse!
     # order
     createOrder(user_id: String!, product_id: Int!, quantity: Int!, postage: Int!, price: Int!, status: Boolean!): MutationResponse!

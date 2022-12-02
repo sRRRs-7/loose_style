@@ -1,5 +1,12 @@
-mutation createCart($user_id: Int!, $product_id: Int!) {
-    createCart(user_id: $user_id, product_id: $product_id) {
+mutation createCart($product_id: Int!) {
+    createCart(product_id: $product_id) {
+        is_error
+        message
+    }
+}
+
+mutation createAdminCart($user_id: Int!, $product_id: Int!) {
+    createAdminCart(user_id: $user_id, product_id: $product_id) {
         is_error
         message
     }

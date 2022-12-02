@@ -2,13 +2,37 @@ import { getProductModalState, productState } from '../../../recoil/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './Modal.module.scss';
+import { CreateCartMutationVariables, useCreateCartMutation } from '../../../src/graphql/types/graphql';
+import { adminClient, NewHeader, option } from '@/graphql/client/client';
+import { GetCookie, RemoveCookie } from 'utils/cookie';
+import { useRouter } from 'next/router';
 
 function Modal() {
     const [_, setIsGetProductModal] = useRecoilState<boolean>(getProductModalState); // get product and show modal
-    const [product, ___] = useRecoilState<any>(productState); // get product modal value
+    const [product, __] = useRecoilState<any>(productState); // get product modal value
+
+    // create cart mutation
+    const addCartMutation = useCreateCartMutation(adminClient, option, NewHeader());
+
+    const router = useRouter();
 
     function modalCloseHandler() {
         setIsGetProductModal(false);
+    }
+
+    function addCartHandler(productId: number) {
+        const addCartVariable: CreateCartMutationVariables = { product_id: productId };
+        addCartMutation
+            .mutateAsync(addCartVariable, option)
+            .then((res) => {
+                setIsGetProductModal(false);
+            })
+            .catch((err) => {
+                if (err.response.status == 401) {
+                    RemoveCookie();
+                    router.push('/login');
+                }
+            });
     }
 
     return (
@@ -35,8 +59,21 @@ function Modal() {
                     <p>{product?.unit_price}</p>
                 </div>
 
-                <button className={styles.btn}>Add Cart</button>
+                {GetCookie() == undefined ? (
+                    <div></div>
+                ) : (
+                    <button
+                        className={styles.btn}
+                        onClick={() => {
+                            addCartHandler(product?.id);
+                        }}
+                    >
+                        Add Cart
+                    </button>
+                )}
             </section>
+
+            {/* modal background blur */}
             <div className={styles.overlay}></div>
         </>
     );

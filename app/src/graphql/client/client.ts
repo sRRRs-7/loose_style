@@ -6,22 +6,14 @@ export const tokenClient = new GraphQLClient(`${process.env.NEXT_PUBLIC_TOKEN_EN
 export const client = new GraphQLClient(`${process.env.NEXT_PUBLIC_END_POINT}`); // users client
 export const adminClient = new GraphQLClient(`${process.env.NEXT_PUBLIC_ADMIN_END_POINT}`); // manage client
 
-const token = GetCookie();
-const headers = {
-    authorization: `Bearer ${token}`,
-};
-
 export const option = {
     onMutate: () => {},
     onError: () => {},
     onSuccess: () => {},
     // onSettled: () => {
-    //         //refetch
     //     queryClient?.invalidateQueries(["RepositoryNameQuery"]);
     // },
 };
-
-// export const queryClient = useQueryClient();
 
 type Headers = {
     authorization: string;
@@ -36,7 +28,7 @@ export function NewAdminHeader(): Headers {
 }
 
 export function NewHeader(): Headers {
-    const token = GetAdminCookie();
+    const token = GetCookie();
     const headers = {
         authorization: `Bearer ${token}`,
     };

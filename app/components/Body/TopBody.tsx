@@ -8,7 +8,7 @@ import {
     GetProductMutationVariables,
     useGetProductMutation,
 } from '../../src/graphql/types/graphql';
-import { tokenClient, headers, option } from '../../src/graphql/client/client';
+import { tokenClient, option, NewAdminHeader } from '../../src/graphql/client/client';
 import Modal from './Modal/Modal';
 
 function TopBody() {
@@ -25,11 +25,11 @@ function TopBody() {
 
     // get all products
     const variable: GetAllProductsQueryVariables = { first: 30, skip: 30 * (page - 1) };
-    const { data, isError } = useGetAllProductsQuery(tokenClient, variable, option, headers);
+    const { data, isError } = useGetAllProductsQuery(tokenClient, variable, option, NewAdminHeader());
 
     // get a product handler -> display modal
     const getProductVariable: GetProductMutationVariables = { product_id: productId! };
-    const getProductMutation = useGetProductMutation(tokenClient, option, headers);
+    const getProductMutation = useGetProductMutation(tokenClient, option, NewAdminHeader());
 
     // condition fetch -> exclusive own state reset logic
     useEffect(() => {
@@ -55,6 +55,12 @@ function TopBody() {
     return (
         <>
             {isGetProductModal && <Modal />}
+
+            {data?.getAllProducts.length == 0 && (
+                <div className={styles.flex_box}>
+                    <p>No items</p>
+                </div>
+            )}
 
             <div className={styles.box}>
                 <div className={styles.grid_box}>

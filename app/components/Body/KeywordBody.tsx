@@ -10,7 +10,7 @@ import {
     pathState,
     productState,
     topBodyState,
-} from 'recoil/atom';
+} from '../../recoil/atom';
 import {
     GetProductMutationVariables,
     useGetProductMutation,
@@ -18,7 +18,7 @@ import {
     useGetAllProductsByKeywordMutation,
     SortBy,
 } from '../../src/graphql/types/graphql';
-import { tokenClient, headers, option } from '../../src/graphql/client/client';
+import { tokenClient, option, NewAdminHeader } from '../../src/graphql/client/client';
 import Loading from './Loading';
 import Modal from './Modal/Modal';
 
@@ -43,11 +43,11 @@ function KeywordBody() {
         first: 30,
         skip: 30 * (page - 1),
     };
-    const getProductByKeywordMutation = useGetAllProductsByKeywordMutation(tokenClient, option, headers);
+    const getProductByKeywordMutation = useGetAllProductsByKeywordMutation(tokenClient, option, NewAdminHeader());
 
     // get a product handler -> display modal
     const getProductVariable: GetProductMutationVariables = { product_id: productId! };
-    const getProductMutation = useGetProductMutation(tokenClient, option, headers);
+    const getProductMutation = useGetProductMutation(tokenClient, option, NewAdminHeader());
 
     // condition fetch -> exclusive own state reset logic
     useEffect(() => {
@@ -80,6 +80,12 @@ function KeywordBody() {
     return (
         <>
             {isGetProductModal && <Modal />}
+
+            {products?.length == 0 && (
+                <div className={styles.flex_box}>
+                    <p>No items</p>
+                </div>
+            )}
 
             <section className={styles.box}>
                 <div className={styles.grid_box}>

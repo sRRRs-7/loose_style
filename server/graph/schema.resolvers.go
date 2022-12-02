@@ -123,10 +123,18 @@ func (r *mutationResolver) GetCartItem(ctx context.Context, id int) (*model.Prod
 	return res, nil
 }
 
-func (r *mutationResolver) CreateCart(ctx context.Context, userID int, productID int) (*model.MutationResponse, error) {
-	res, err := r.CreateCartResolver(ctx, userID, productID)
+func (r *mutationResolver) CreateCart(ctx context.Context, productID int) (*model.MutationResponse, error) {
+	res, err := r.CreateCartResolver(ctx, productID)
 	if err != nil {
 		return nil, fmt.Errorf("CreateCart error: %v", err)
+	}
+	return res, nil
+}
+
+func (r *mutationResolver) CreateAdminCart(ctx context.Context, userID int, productID int) (*model.MutationResponse, error) {
+	res, err := r.CreateAdminCartResolver(ctx, userID, productID)
+	if err != nil {
+		return nil, fmt.Errorf("CreateAdminCart error: %v", err)
 	}
 	return res, nil
 }

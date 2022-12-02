@@ -8,7 +8,7 @@ import {
     CreateAdminTokenMutationVariables,
     useCreateAdminTokenMutation,
 } from '../../../src/graphql/types/graphql';
-import { tokenClient, option, headers } from '../../../src/graphql/client/client';
+import { tokenClient, option, NewAdminHeader } from '../../../src/graphql/client/client';
 import nookies from 'nookies';
 import { GetAdminCookie, GetCookie, SetAdminCookie } from 'utils/cookie';
 
@@ -25,11 +25,11 @@ function ManageLogin() {
 
     // admin mutation
     const adminVariable: GetAdminMutationVariables = { username: username, password: password };
-    const adminMutation = useGetAdminMutation(tokenClient, option, headers);
+    const adminMutation = useGetAdminMutation(tokenClient, option, NewAdminHeader());
 
     // token mutation
     const tokenVariable: CreateAdminTokenMutationVariables = { user_id: username };
-    const tokenMutation = useCreateAdminTokenMutation(tokenClient, option, headers);
+    const tokenMutation = useCreateAdminTokenMutation(tokenClient, option, NewAdminHeader());
 
     function changeHandlerId(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

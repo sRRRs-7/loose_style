@@ -16,7 +16,7 @@ import {
     GetAllProductByCategoryMutationVariables,
     useGetAllProductByCategoryMutation,
 } from '../../src/graphql/types/graphql';
-import { tokenClient, headers, option } from '../../src/graphql/client/client';
+import { tokenClient, option, NewHeader, NewAdminHeader } from '../../src/graphql/client/client';
 import Modal from './Modal/Modal';
 
 function CategoryBody() {
@@ -39,11 +39,11 @@ function CategoryBody() {
         first: 30,
         skip: 30 * (page - 1),
     };
-    const getProductByCategoryMutation = useGetAllProductByCategoryMutation(tokenClient, option, headers);
+    const getProductByCategoryMutation = useGetAllProductByCategoryMutation(tokenClient, option, NewHeader());
 
     // get a product handler -> display modal
     const getProductVariable: GetProductMutationVariables = { product_id: productId! };
-    const getProductMutation = useGetProductMutation(tokenClient, option, headers);
+    const getProductMutation = useGetProductMutation(tokenClient, option, NewAdminHeader());
 
     // condition fetch -> exclusive own state reset logic
     useEffect(() => {
@@ -76,6 +76,12 @@ function CategoryBody() {
     return (
         <>
             {isGetProductModal && <Modal />}
+
+            {products?.length == 0 && (
+                <div className={styles.flex_box}>
+                    <p>No items</p>
+                </div>
+            )}
 
             <section className={styles.box}>
                 <div className={styles.grid_box}>

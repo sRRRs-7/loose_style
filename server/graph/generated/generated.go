@@ -87,10 +87,11 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		CreateAdminCart          func(childComplexity int, userID int, productID int) int
 		CreateAdminToken         func(childComplexity int, userID string) int
 		CreateAdminUser          func(childComplexity int, username string, password string) int
 		CreateBrand              func(childComplexity int, brand string) int
-		CreateCart               func(childComplexity int, userID int, productID int) int
+		CreateCart               func(childComplexity int, productID int) int
 		CreateCategory           func(childComplexity int, category string) int
 		CreateMedia              func(childComplexity int, title string, contents string, img string) int
 		CreateOrder              func(childComplexity int, userID string, productID int, quantity int, postage int, price int, status bool) int
@@ -224,7 +225,8 @@ type MutationResolver interface {
 	GetAllProductsByCategory(ctx context.Context, category string, first int, skip int) ([]*model.Product, error)
 	GetAllProductsByKeyword(ctx context.Context, keyword string, sortBy model.SortBy, first int, skip int) ([]*model.Product, error)
 	GetCartItem(ctx context.Context, id int) (*model.Product, error)
-	CreateCart(ctx context.Context, userID int, productID int) (*model.MutationResponse, error)
+	CreateCart(ctx context.Context, productID int) (*model.MutationResponse, error)
+	CreateAdminCart(ctx context.Context, userID int, productID int) (*model.MutationResponse, error)
 	DeleteCart(ctx context.Context, id int) (*model.MutationResponse, error)
 	CreateOrder(ctx context.Context, userID string, productID int, quantity int, postage int, price int, status bool) (*model.MutationResponse, error)
 	CreateCategory(ctx context.Context, category string) (*model.MutationResponse, error)
@@ -434,6 +436,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Media.UpdatedAt(childComplexity), true
 
+	case "Mutation.createAdminCart":
+		if e.complexity.Mutation.CreateAdminCart == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createAdminCart_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateAdminCart(childComplexity, args["user_id"].(int), args["product_id"].(int)), true
+
 	case "Mutation.createAdminToken":
 		if e.complexity.Mutation.CreateAdminToken == nil {
 			break
@@ -480,7 +494,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateCart(childComplexity, args["user_id"].(int), args["product_id"].(int)), true
+		return e.complexity.Mutation.CreateCart(childComplexity, args["product_id"].(int)), true
 
 	case "Mutation.createCategory":
 		if e.complexity.Mutation.CreateCategory == nil {
@@ -1374,7 +1388,8 @@ extend type Mutation {
   ): [Product!]!
   # cart
   getCartItem(id: Int!): Product!
-  createCart(user_id: Int!, product_id: Int!): MutationResponse!
+  createCart(product_id: Int!): MutationResponse!
+  createAdminCart(user_id: Int!, product_id: Int!): MutationResponse!
   deleteCart(id: Int!): MutationResponse!
   # order
   createOrder(
@@ -1553,6 +1568,30 @@ func (ec *executionContext) dir_validation_args(ctx context.Context, rawArgs map
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createAdminCart_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["user_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user_id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["user_id"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["product_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("product_id"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["product_id"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createAdminToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1611,23 +1650,14 @@ func (ec *executionContext) field_Mutation_createCart_args(ctx context.Context, 
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
-	if tmp, ok := rawArgs["user_id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user_id"))
+	if tmp, ok := rawArgs["product_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("product_id"))
 		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["user_id"] = arg0
-	var arg1 int
-	if tmp, ok := rawArgs["product_id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("product_id"))
-		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["product_id"] = arg1
+	args["product_id"] = arg0
 	return args, nil
 }
 
@@ -4369,7 +4399,7 @@ func (ec *executionContext) _Mutation_createCart(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateCart(rctx, fc.Args["user_id"].(int), fc.Args["product_id"].(int))
+		return ec.resolvers.Mutation().CreateCart(rctx, fc.Args["product_id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4412,6 +4442,69 @@ func (ec *executionContext) fieldContext_Mutation_createCart(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createCart_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createAdminCart(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createAdminCart(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateAdminCart(rctx, fc.Args["user_id"].(int), fc.Args["product_id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.MutationResponse)
+	fc.Result = res
+	return ec.marshalNMutationResponse2ᚖgithubᚗcomᚋsRRRsᚑ7ᚋloose_styleᚗgitᚋgraphᚋmodelᚐMutationResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createAdminCart(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_MutationResponse_id(ctx, field)
+			case "is_error":
+				return ec.fieldContext_MutationResponse_is_error(ctx, field)
+			case "message":
+				return ec.fieldContext_MutationResponse_message(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MutationResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createAdminCart_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -10603,6 +10696,15 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createCart(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createAdminCart":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createAdminCart(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {

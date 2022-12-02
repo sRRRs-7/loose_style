@@ -14,7 +14,7 @@ import (
 
 // mutation
 
-func (r *Resolver) CreateCartResolver(ctx context.Context, userID int, productID int) (*model.MutationResponse, error) {
+func (r *Resolver) CreateAdminCartResolver(ctx context.Context, userID, productID int) (*model.MutationResponse, error) {
 	res := &model.MutationResponse{
 		IsError: false,
 		Message: "crete a cart OK",
@@ -25,6 +25,64 @@ func (r *Resolver) CreateCartResolver(ctx context.Context, userID int, productID
 		res.IsError = true
 		res.Message = "error"
 		return res, fmt.Errorf("gin context convert error: %v", err)
+	}
+
+	args := db.CreateCartItemParams {
+		UserID: int64(userID),
+		ProductID: int64(productID),
+	}
+
+	user, err := r.store.CreateCartItem(gc, args)
+	if err != nil {
+		res.IsError = true
+		res.Message = "error"
+		return res, fmt.Errorf("failed to create cart: %v", err)
+	}
+
+	fmt.Println(user)
+	return res, nil
+}
+
+
+func (r *Resolver) CreateCartResolver(ctx context.Context, productID int) (*model.MutationResponse, error) {
+	res := &model.MutationResponse{
+		IsError: false,
+		Message: "crete a cart OK",
+	}
+
+	gc, err := GinContextFromContext(ctx)
+	if err != nil {
+		res.IsError = true
+		res.Message = "error"
+		return res, fmt.Errorf("gin context convert error: %v", err)
+	}
+
+	// user id get from redis
+	authorizationHeader := gc.GetHeader(authorizationHeaderKey)
+	fields := strings.Split(authorizationHeader, " ")
+	accessToken := fields[1]
+
+	key, err := cryptography.HashPassword(accessToken)
+	if err != nil {
+		return nil, fmt.Errorf("GetAllCartItemResolver error: %v", err)
+	}
+
+	// redis value get
+	redisValue := session.GetRedis(gc, key)
+	if redisValue == nil {
+		return nil, fmt.Errorf("get all cart item error get redis value is nil : %v", err)
+	}
+	// string processing
+	s := strings.Split(redisValue.String(), ",")
+	s = strings.Split(s[1], ":")
+	userId := s[1]
+	userId = userId[1:]
+	userId = userId[:len(userId)-1]
+
+	// get user id
+	userID, err := r.store.GetUser(gc, userId)
+	if err != nil {
+		return nil, fmt.Errorf("GetUser in all cart error : %v", err)
 	}
 
 	args := db.CreateCartItemParams {

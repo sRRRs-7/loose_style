@@ -99,7 +99,8 @@ extend type Mutation {
   ): [Product!]!
   # cart
   getCartItem(id: Int!): Product!
-  createCart(user_id: Int!, product_id: Int!): MutationResponse!
+  createCart(product_id: Int!): MutationResponse!
+  createAdminCart(user_id: Int!, product_id: Int!): MutationResponse!
   deleteCart(id: Int!): MutationResponse!
   # order
   createOrder(

@@ -1,69 +1,53 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import styles from './Cart.module.scss';
 import { useRecoilState } from 'recoil';
-import { cartIdState, cartModalState, pageState, pathState, productState } from '../../recoil/atom';
+import { cartIdState, cartModalState, getAllCartState, pageState, pathState, productState } from '../../recoil/atom';
 import {
     GetAllCartItemsQueryVariables,
     useGetAllCartItemsQuery,
     GetCartItemMutationVariables,
     useGetCartItemMutation,
-    DeleteCartMutationVariables,
-    useDeleteCartMutation,
 } from '../../src/graphql/types/graphql';
-import { option, headers, adminClient } from '@/graphql/client/client';
+import { option, adminClient, NewHeader } from '@/graphql/client/client';
 import Pagination from 'components/Body/Pagination/Pagination';
-import { GetCookie, RemoveCookie } from 'utils/cookie';
+import { RemoveCookie } from 'utils/cookie';
 import { useRouter } from 'next/router';
 import CartLoading from './CartLoading';
 import CartModal from './Modal/CartModal';
+import KeyboardCapslockTwoToneIcon from '@mui/icons-material/KeyboardCapslockTwoTone';
+import Footer from 'components/Footer/Footer';
 
 function Cart() {
-    const [_, setPath] = useRecoilState<string>(pathState); // header current state blue text
-    const [page, __] = useRecoilState(pageState); // pagination state
+    // display header current state blue text
+    const [_, setPath] = useRecoilState<string>(pathState);
+    // pagination state
+    const [page, __] = useRecoilState(pageState);
+    // modal state
     const [isCateModal, setIsCartModal] = useRecoilState<boolean>(cartModalState);
-    const [___, setProduct] = useRecoilState<any>(productState); // get product modal value  -> pass modal
-    const [____, setDeleteCartId] = useRecoilState<number>(cartIdState); // receive cart id from top cart page
+    // get product modal value  -> pass modal
+    const [___, setProduct] = useRecoilState<any>(productState);
+    // receive cart id from top cart page
+    const [____, setDeleteCartId] = useRecoilState<number>(cartIdState);
+    // status
     const [err, setErr] = useState(false);
-    const [token, setToken] = useState<string>('');
+    // get a cart args
     const [cartId, setCartId] = useState<number>(0);
-    const [isGetCart, setIsGetCart] = useState<boolean>(false);
+    const [isGetCart, setIsGetCart] = useRecoilState<boolean>(getAllCartState);
+    // initial render spinner
+    const [isFetch, setIsFetch] = useState<boolean>(true);
 
     const router = useRouter();
 
     // get all cart
     const getAllVariable: GetAllCartItemsQueryVariables = { first: 30, skip: 30 * (page - 1) };
-    const { data, isError, isLoading } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, headers);
+    const { data, isError } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, NewHeader());
 
     // get a cart mutation
     const getVariable: GetCartItemMutationVariables = { id: cartId };
-    const getMutation = useGetCartItemMutation(adminClient, option, headers);
+    const getMutation = useGetCartItemMutation(adminClient, option, NewHeader());
 
-    // session timeout -> remove cookie
-    if (isError) {
-        RemoveCookie();
-        router.push('/');
-    }
-
-    // before draw display
-    useLayoutEffect(() => {
-        // reload once
-        if (window.name != 'reload') {
-            window.location.reload();
-            window.name = 'reload';
-        }
-    }, []);
-
-    //initial render
     useEffect(() => {
-        // get cookie when client render
-        if (typeof window != undefined) {
-            const cookie = GetCookie(); // utils function
-            setToken(cookie as string);
-        }
         setPath('/cart');
-    }, [token]);
-
-    useEffect(() => {
         // get a cart mutation
         if (isGetCart) {
             getMutation
@@ -72,19 +56,43 @@ function Cart() {
                     setProduct(res.getCartItem); // pass to cart modal
                 })
                 .catch((err) => {
+                    if (err.response.status == 401) {
+                        RemoveCookie();
+                        router.push('/');
+                    }
                     setErr(true);
                 });
         }
     }, [isCateModal, cartId, isGetCart]);
 
+    // show modal
     function cartModalHandler(id: number) {
         setIsCartModal(true); // show modal
-        setCartId(id); // get a cart arg
+        setCartId(id); // get a cart arg -> (state -> useEffect -> mutation)
         setIsGetCart(true); // get a cart function trigger
     }
 
+    // from bottom to top
+    function returnTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    }
+
+    // session timeout -> remove cookie
+    if (isError) {
+        RemoveCookie();
+    }
+    // initial loading spinner
+    useEffect(() => {
+        setTimeout(() => {
+            setIsFetch(false);
+        }, 500);
+    }, [isFetch]);
+
     // Loading display render
-    if (isLoading) {
+    if (isFetch) {
         return <CartLoading />;
     }
 
@@ -127,6 +135,20 @@ function Cart() {
                         </div>
                     ))}
                 </div>
+            </div>
+
+            <div className={styles.top}>
+                <KeyboardCapslockTwoToneIcon
+                    className={styles.topIcon}
+                    onClick={() => {
+                        returnTop();
+                    }}
+                />
+                <p>To the top</p>
+            </div>
+
+            <div>
+                <Footer />
             </div>
         </>
     );

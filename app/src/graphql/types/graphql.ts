@@ -75,6 +75,7 @@ export type Media = Node & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createAdminCart: MutationResponse;
   createAdminToken: Scalars['String'];
   createAdminUser: MutationResponse;
   createBrand: MutationResponse;
@@ -98,6 +99,12 @@ export type Mutation = {
 };
 
 
+export type MutationCreateAdminCartArgs = {
+  product_id: Scalars['Int'];
+  user_id: Scalars['Int'];
+};
+
+
 export type MutationCreateAdminTokenArgs = {
   user_id: Scalars['String'];
 };
@@ -116,7 +123,6 @@ export type MutationCreateBrandArgs = {
 
 export type MutationCreateCartArgs = {
   product_id: Scalars['Int'];
-  user_id: Scalars['Int'];
 };
 
 
@@ -429,12 +435,19 @@ export type CreateBrandMutationVariables = Exact<{
 export type CreateBrandMutation = { __typename?: 'Mutation', createBrand: { __typename?: 'MutationResponse', is_error: boolean, message: string } };
 
 export type CreateCartMutationVariables = Exact<{
-  user_id: Scalars['Int'];
   product_id: Scalars['Int'];
 }>;
 
 
 export type CreateCartMutation = { __typename?: 'Mutation', createCart: { __typename?: 'MutationResponse', is_error: boolean, message: string } };
+
+export type CreateAdminCartMutationVariables = Exact<{
+  user_id: Scalars['Int'];
+  product_id: Scalars['Int'];
+}>;
+
+
+export type CreateAdminCartMutation = { __typename?: 'Mutation', createAdminCart: { __typename?: 'MutationResponse', is_error: boolean, message: string } };
 
 export type GetCartItemMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -683,8 +696,8 @@ export const useCreateBrandMutation = <
       options
     );
 export const CreateCartDocument = `
-    mutation createCart($user_id: Int!, $product_id: Int!) {
-  createCart(user_id: $user_id, product_id: $product_id) {
+    mutation createCart($product_id: Int!) {
+  createCart(product_id: $product_id) {
     is_error
     message
   }
@@ -701,6 +714,27 @@ export const useCreateCartMutation = <
     useMutation<CreateCartMutation, TError, CreateCartMutationVariables, TContext>(
       ['createCart'],
       (variables?: CreateCartMutationVariables) => fetcher<CreateCartMutation, CreateCartMutationVariables>(client, CreateCartDocument, variables, headers)(),
+      options
+    );
+export const CreateAdminCartDocument = `
+    mutation createAdminCart($user_id: Int!, $product_id: Int!) {
+  createAdminCart(user_id: $user_id, product_id: $product_id) {
+    is_error
+    message
+  }
+}
+    `;
+export const useCreateAdminCartMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<CreateAdminCartMutation, TError, CreateAdminCartMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<CreateAdminCartMutation, TError, CreateAdminCartMutationVariables, TContext>(
+      ['createAdminCart'],
+      (variables?: CreateAdminCartMutationVariables) => fetcher<CreateAdminCartMutation, CreateAdminCartMutationVariables>(client, CreateAdminCartDocument, variables, headers)(),
       options
     );
 export const GetCartItemDocument = `

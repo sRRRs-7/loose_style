@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './CreateCart.module.scss';
-import { useCreateCartMutation, CreateCartMutationVariables } from '../../../src/graphql/types/graphql';
+import { useCreateAdminCartMutation, CreateAdminCartMutationVariables } from '../../../src/graphql/types/graphql';
 import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
@@ -11,11 +11,11 @@ function CreateCart() {
     const [err, setErr] = useState<boolean>(false);
     const [success, setSuccess] = useState(false);
 
-    const variable: CreateCartMutationVariables = {
+    const variable: CreateAdminCartMutationVariables = {
         user_id: userId!,
         product_id: productId!,
     };
-    const mutation = useCreateCartMutation(adminClient, option, NewAdminHeader());
+    const mutation = useCreateAdminCartMutation(adminClient, option, NewAdminHeader());
 
     function changeHandlerUserId(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;
@@ -36,7 +36,7 @@ function CreateCart() {
         mutation
             .mutateAsync(variable, option)
             .then((res) => {
-                if (!res.createCart.is_error) {
+                if (!res.createAdminCart.is_error) {
                     setErr(false);
                     setSuccess(true);
                 }
