@@ -1,13 +1,13 @@
+import { Pagination } from '@mui/material';
 import React from 'react';
-import styles from './Body.module.scss';
+import styles from './Cart.module.scss';
 import { DotLoader } from 'react-spinners';
-import CategoryBar from './CategoryBar/CategoryBar';
 
-const Loading = () => {
+const CartLoading = () => {
     return (
         <>
             <section>
-                <CategoryBar />
+                <Pagination />
             </section>
 
             <section className={styles.spinnerBox}>
@@ -19,4 +19,4 @@ const Loading = () => {
     );
 };
 
-export default Loading;
+export default CartLoading;

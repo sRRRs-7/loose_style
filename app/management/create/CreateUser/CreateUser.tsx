@@ -1,15 +1,10 @@
-import { pathState } from '../../recoil/atom';
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import styles from './Signup.module.scss';
-import router, { useRouter } from 'next/router';
-import { CreateUserMutationVariables, useCreateUserMutation } from '../../src/graphql/types/graphql';
-import { tokenClient, headers, option } from '../../src/graphql/client/client';
+import React, { useState } from 'react';
+import styles from './CreateUser.module.scss';
+import { useCreateUserMutation, CreateUserMutationVariables } from '../../../src/graphql/types/graphql';
+import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
+import { RemoveAdminCookie } from 'utils/cookie';
 
-function Signup() {
-    const [__, setPath] = useRecoilState<string>(pathState);
-    const [err, setErr] = useState<boolean>(false);
-    // input value
+function CreateUser() {
     const [userID, setUserID] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [username, setUsername] = useState<string>('');
@@ -24,10 +19,10 @@ function Signup() {
     const [street, setStreet] = useState<string>('');
     const [building, setBuilding] = useState<string>('');
     const [phone, setPhone] = useState<string>();
-    // router
-    const router = useRouter();
+    // status
+    const [err, setErr] = useState<boolean>(false);
+    const [success, setSuccess] = useState(false);
 
-    // create user mutation
     const variable: CreateUserMutationVariables = {
         user_id: userID,
         password: password,
@@ -44,7 +39,7 @@ function Signup() {
         building: building,
         phone: phone!,
     };
-    const mutation = useCreateUserMutation(tokenClient, option, headers);
+    const mutation = useCreateUserMutation(adminClient, option, NewAdminHeader());
 
     function changeHandlerUserID(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;
@@ -126,7 +121,7 @@ function Signup() {
             birth == '' ||
             familyName == '' ||
             firstName == '' ||
-            postcode == 0 ||
+            postcode == null ||
             prefectureCode == '' ||
             street == '' ||
             city == '' ||
@@ -134,27 +129,41 @@ function Signup() {
             phone == ''
         ) {
             setErr(true);
+            setSuccess(false);
             return;
         }
-
         mutation
             .mutateAsync(variable, option)
             .then((res) => {
                 if (!res.createUser.is_error) {
-                    setPath('/login');
-                    router.push('/login');
-                } else {
-                    setErr(true);
+                    setErr(false);
+                    setSuccess(true);
                 }
             })
             .catch((err) => {
+                if (err.response.status == 401) {
+                    RemoveAdminCookie();
+                    window.location.reload();
+                }
                 setErr(true);
+                setSuccess(false);
+                return;
             });
+        setUserID('');
+        setPassword('');
+        setUsername('');
+        setEmail('');
+        setSex('');
+        setBirth('');
+        setFamilyName('');
+        setFirstName('');
+        setPostcode(0);
+        setPrefectureCode('');
+        setStreet('');
+        setCity('');
+        setBuilding('');
+        setPhone('');
     }
-
-    useEffect(() => {
-        setPath(router.pathname);
-    }, []);
 
     return (
         <div className={styles.container}>
@@ -165,9 +174,9 @@ function Signup() {
                     </div>
 
                     <div>
-                        {err && (
-                            <div className={styles.err}>
-                                <p>error</p>
+                        {success && (
+                            <div className={styles.success}>
+                                <p>Success</p>
                             </div>
                         )}
                     </div>
@@ -354,9 +363,9 @@ function Signup() {
                         />
                     </div>
 
-                    <div className={styles.signupBox}>
+                    <div className={styles.adminBox}>
                         <button
-                            className={styles.signupButton}
+                            className={styles.adminButton}
                             onClick={() => {
                                 createHandler();
                             }}
@@ -364,10 +373,18 @@ function Signup() {
                             Create
                         </button>
                     </div>
+
+                    <div>
+                        {err && (
+                            <div className={styles.err}>
+                                <p>error</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
     );
 }
 
-export default Signup;
+export default CreateUser;

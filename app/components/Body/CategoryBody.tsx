@@ -7,10 +7,9 @@ import {
     getProductModalState,
     keywordSearchState,
     pageState,
-    pathState,
     productState,
     topBodyState,
-} from 'recoil/atom';
+} from '../../recoil/atom';
 import {
     GetProductMutationVariables,
     useGetProductMutation,
@@ -18,7 +17,7 @@ import {
     useGetAllProductByCategoryMutation,
 } from '../../src/graphql/types/graphql';
 import { tokenClient, headers, option } from '../../src/graphql/client/client';
-import Modal from '../Modal/Modal';
+import Modal from './Modal/Modal';
 
 function CategoryBody() {
     const [page, _] = useRecoilState<number>(pageState);

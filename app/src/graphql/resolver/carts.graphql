@@ -20,6 +20,13 @@ mutation getCartItem($id: Int!) {
     }
 }
 
+mutation deleteCart($id: Int!) {
+    deleteCart(id: $id) {
+        is_error
+        message
+    }
+}
+
 query getAllCartItems($first: Int!, $skip: Int!) {
     getAllCartItems(first: $first, skip: $skip) {
         id
@@ -32,5 +39,6 @@ query getAllCartItems($first: Int!, $skip: Int!) {
         brand
         category
         created_at
+        cart_id
     }
 }

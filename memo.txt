@@ -1,16 +1,10 @@
-https
-expired time
-error handling
 
-cart modal
 add cart
-cart sql view
-redis instance create
+delete cart
+
+g-gram, morphological analysis
 
 grpc
-
-colly (amazon, Rakuten)
-g-gram, morphological analysis
 
 postgres index
 

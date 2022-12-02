@@ -67,6 +67,18 @@
     @include base_select();
 }
 
+.trash_icon {
+    margin-top: 7px;
+    font-size: 250%;
+    margin-left: 25px;
+    @include base_text();
+}
+
+.trash_icon:hover {
+    color: red;
+    cursor: pointer;
+}
+
 .sign_text {
     padding: 0px 50px 0px 0px;
     font-size: 180%;

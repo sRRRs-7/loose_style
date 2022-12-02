@@ -30,7 +30,7 @@ extend type Query {
     # products
     getAllProducts(first: Int!, skip: Int!): [Product!]!
     # cart
-    getAllCartItems(first: Int!, skip: Int!): [Product!]!
+    getAllCartItems(first: Int!, skip: Int!): [Product_cartId!]!
     # order
     getAllOrders(user_id: String!): [Order!]!
     getOrder(user_id: String!, product_id: Int!): Order!
@@ -176,6 +176,21 @@ type Product implements Node {
     category: String!
     created_at: Time!
     updated_at: Time!
+}
+
+type Product_cartId implements Node {
+    id: ID!
+    product_name: String!
+    description: String!
+    img: String!
+    unit_price: Int!
+    discount: Float!
+    stock: Int!
+    brand: Int!
+    category: String!
+    created_at: Time!
+    updated_at: Time!
+    cart_id: Int!
 }
 
 type Cart_item implements Node {

@@ -4,6 +4,15 @@
     justify-content: center;
 }
 
+.flex_box {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 48%;
+    font-family: monospace;
+    scale: 150%;
+}
+
 .spinnerBox {
     @include base_box(100% 100% 100% 100%);
     justify-content: center;
@@ -19,12 +28,16 @@
 }
 
 .grid_items {
-    padding: 30px;
     text-align: center;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    border: 0.1px solid rgb(189, 187, 187);
+    padding: 10px;
+    margin: 10px;
 }
 
 .grid_items:hover {
-    scale: 120%;
+    scale: 110%;
     cursor: pointer;
 }
 
@@ -48,12 +61,38 @@
 
 .text {
     @include base_text();
-    margin: 0px 0px 0px 50px;
+    margin: 0px 0px 0px 0px;
     font-size: 40px;
+}
+
+.flex_box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.close_btn {
+    padding: 0.3rem;
+    background-color: rgb(232, 232, 232);
+    border-radius: 94px 65px 106px 93px / 120px 125px 190px 82px;
+    border: none;
+    cursor: pointer;
+}
+
+.close_btn:hover {
+    scale: 110%;
 }
 
 .err {
     font-family: monospace;
     font-size: 30px;
     color: rgb(0, 0, 0);
+}
+
+.spinnerBox {
+    @include base_box(100% 100% 100% 100%);
+    justify-content: center;
+    align-items: center;
+    margin: 0px 0px 250px 0px;
+    padding-top: 100px;
 }

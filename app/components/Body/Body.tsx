@@ -3,7 +3,7 @@ import styles from './Body.module.scss';
 import CategoryBar from './CategoryBar/CategoryBar';
 import Pagination from './Pagination/Pagination';
 import { useRecoilState } from 'recoil';
-import { categorySearchState, keywordSearchState, pageState, pathState, topBodyState } from 'recoil/atom';
+import { categorySearchState, keywordSearchState, pageState, pathState, topBodyState } from '../../recoil/atom';
 import KeyboardCapslockTwoToneIcon from '@mui/icons-material/KeyboardCapslockTwoTone';
 import TopBody from './TopBody';
 import CategoryBody from './CategoryBody';

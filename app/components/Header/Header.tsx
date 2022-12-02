@@ -71,25 +71,25 @@ function Header() {
         setPath(pathname);
     }
 
-    function homeHandler() {
-        // display refresh
-        if (router.pathname == '/') {
-            window.location.reload();
-        }
-    }
-
     return (
         <div className={styles.box}>
             <div className={styles.title_box}>
                 <Link href='/'>
-                    <p className={styles.text} onClick={() => homeHandler()}>
+                    <p
+                        className={styles.text}
+                        onClick={() => {
+                            if (router.pathname == '/') {
+                                window.location.reload();
+                            }
+                        }}
+                    >
                         Loose Style
                     </p>
                 </Link>
             </div>
 
             <div className={styles.input_box}>
-                {(router.pathname == '/' || router.pathname == '/cart') && (
+                {router.pathname == '/' && (
                     <div>
                         <input
                             type='text'
@@ -107,7 +107,9 @@ function Header() {
             {token ? (
                 <div className={styles.sign_box}>
                     {path == '/cart' ? (
-                        <ShoppingCartTwoToneIcon sx={{ color: blue[700] }} fontSize='large' />
+                        <div>
+                            <ShoppingCartTwoToneIcon sx={{ color: blue[700] }} fontSize='large' />
+                        </div>
                     ) : (
                         <Link href='/cart'>
                             <ShoppingCartTwoToneIcon className={styles.cart_icon} onClick={() => pathHandler('/cart')} />

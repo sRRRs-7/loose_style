@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Body.module.scss';
 import { useRecoilState } from 'recoil';
-import { categorySearchState, getProductModalState, keywordSearchState, pageState, pathState, productState, topBodyState } from 'recoil/atom';
+import { categorySearchState, getProductModalState, keywordSearchState, pageState, pathState, productState, topBodyState } from '../../recoil/atom';
 import {
     GetAllProductsQueryVariables,
     useGetAllProductsQuery,
@@ -9,7 +9,7 @@ import {
     useGetProductMutation,
 } from '../../src/graphql/types/graphql';
 import { tokenClient, headers, option } from '../../src/graphql/client/client';
-import Modal from '../Modal/Modal';
+import Modal from './Modal/Modal';
 
 function TopBody() {
     const [page, _] = useRecoilState<number>(pageState);

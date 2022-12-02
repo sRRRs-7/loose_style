@@ -1,4 +1,4 @@
-import { pathState } from 'recoil/atom';
+import { pathState } from '../../recoil/atom';
 import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -55,12 +55,12 @@ function Login() {
                             setToken(res.createToken);
                             SetCookie(res.createToken);
                         })
-                        .catch((res) => {
+                        .catch((err) => {
                             setErr(true);
                         });
                 }
             })
-            .catch((res) => {
+            .catch((err) => {
                 setErr(true);
             });
     }

@@ -110,6 +110,23 @@ type Product struct {
 
 func (Product) IsNode() {}
 
+type ProductCartID struct {
+	ID          string    `json:"id"`
+	ProductName string    `json:"product_name"`
+	Description string    `json:"description"`
+	Img         string    `json:"img"`
+	UnitPrice   int       `json:"unit_price"`
+	Discount    float64   `json:"discount"`
+	Stock       int       `json:"stock"`
+	Brand       int       `json:"brand"`
+	Category    string    `json:"category"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	CartID      int       `json:"cart_id"`
+}
+
+func (ProductCartID) IsNode() {}
+
 type User struct {
 	ID                    string    `json:"id"`
 	UserID                string    `json:"user_id"`

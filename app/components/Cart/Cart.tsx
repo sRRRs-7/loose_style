@@ -1,24 +1,28 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import styles from './Cart.module.scss';
 import { useRecoilState } from 'recoil';
-import { cartModalState, pageState, pathState, productState } from 'recoil/atom';
+import { cartIdState, cartModalState, pageState, pathState, productState } from '../../recoil/atom';
 import {
     GetAllCartItemsQueryVariables,
     useGetAllCartItemsQuery,
     GetCartItemMutationVariables,
     useGetCartItemMutation,
+    DeleteCartMutationVariables,
+    useDeleteCartMutation,
 } from '../../src/graphql/types/graphql';
 import { option, headers, adminClient } from '@/graphql/client/client';
 import Pagination from 'components/Body/Pagination/Pagination';
-import Modal from 'components/Modal/Modal';
 import { GetCookie, RemoveCookie } from 'utils/cookie';
 import { useRouter } from 'next/router';
+import CartLoading from './CartLoading';
+import CartModal from './Modal/CartModal';
 
 function Cart() {
     const [_, setPath] = useRecoilState<string>(pathState); // header current state blue text
     const [page, __] = useRecoilState(pageState); // pagination state
     const [isCateModal, setIsCartModal] = useRecoilState<boolean>(cartModalState);
     const [___, setProduct] = useRecoilState<any>(productState); // get product modal value  -> pass modal
+    const [____, setDeleteCartId] = useRecoilState<number>(cartIdState); // receive cart id from top cart page
     const [err, setErr] = useState(false);
     const [token, setToken] = useState<string>('');
     const [cartId, setCartId] = useState<number>(0);
@@ -28,11 +32,11 @@ function Cart() {
 
     // get all cart
     const getAllVariable: GetAllCartItemsQueryVariables = { first: 30, skip: 30 * (page - 1) };
-    const { data, isError } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, headers);
+    const { data, isError, isLoading } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, headers);
 
     // get a cart mutation
     const getVariable: GetCartItemMutationVariables = { id: cartId };
-    const mutation = useGetCartItemMutation(adminClient, option, headers);
+    const getMutation = useGetCartItemMutation(adminClient, option, headers);
 
     // session timeout -> remove cookie
     if (isError) {
@@ -62,12 +66,12 @@ function Cart() {
     useEffect(() => {
         // get a cart mutation
         if (isGetCart) {
-            mutation
+            getMutation
                 .mutateAsync(getVariable, option)
                 .then((res) => {
-                    setProduct(res.getCartItem);
+                    setProduct(res.getCartItem); // pass to cart modal
                 })
-                .catch((res) => {
+                .catch((err) => {
                     setErr(true);
                 });
         }
@@ -79,38 +83,47 @@ function Cart() {
         setIsGetCart(true); // get a cart function trigger
     }
 
+    // Loading display render
+    if (isLoading) {
+        return <CartLoading />;
+    }
+
     return (
         <>
             <div>
                 <Pagination />
             </div>
 
-            {isCateModal && <Modal />}
+            <div>{isCateModal && <CartModal />}</div>
 
-            <div>
-                {err && (
-                    <div className={styles.err}>
-                        <p>No contents</p>
-                    </div>
-                )}
-            </div>
+            {err && (
+                <div className={styles.err}>
+                    <p>No contents</p>
+                </div>
+            )}
+
+            {data?.getAllCartItems.length == 0 && (
+                <div className={styles.flex_box}>
+                    <p>No items</p>
+                </div>
+            )}
 
             <div className={styles.box}>
                 <div className={styles.grid_box}>
-                    {data?.getAllCartItems.map((m) => (
+                    {data?.getAllCartItems.map((c) => (
                         <div
                             className={styles.grid_items}
-                            key={m.id}
+                            key={c.id}
                             onClick={() => {
-                                cartModalHandler(parseInt(m.id));
+                                cartModalHandler(parseInt(c.id));
+                                setDeleteCartId(c.cart_id);
                             }}
                         >
-                            <p>{m.id}</p>
-                            <p>{m.brand}</p>
-                            <p>{m.product_name}</p>
-                            <img src={m.img} alt='product_image' />
-                            <p>{m.unit_price}</p>
-                            <p>{m.created_at}</p>
+                            <p>{c.id}</p>
+                            <img src={c.img} alt='product_image' />
+                            <p>{c.brand}</p>
+                            <p>{c.product_name}</p>
+                            <p>{c.unit_price}</p>
                         </div>
                     ))}
                 </div>

@@ -20,7 +20,7 @@ import {
 } from '../../src/graphql/types/graphql';
 import { tokenClient, headers, option } from '../../src/graphql/client/client';
 import Loading from './Loading';
-import Modal from '../Modal/Modal';
+import Modal from './Modal/Modal';
 
 function KeywordBody() {
     const [page, _] = useRecoilState<number>(pageState);

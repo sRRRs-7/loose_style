@@ -1,10 +1,10 @@
 import { adminState } from 'recoil/atom';
 import Footer from 'components/Footer/Footer';
-import ManageHeader from 'management/createDisplay/Header/ManageHeader';
+import ManageHeader from 'management/create/Header/ManageHeader';
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import ManageLogin from 'management/createDisplay/Login/ManageLogin';
-import ManageCategory from 'management/createDisplay/Category/ManageCategory';
+import ManageLogin from 'management/create/Login/ManageLogin';
+import ManageCategory from 'management/create/Category/ManageCategory';
 import Manage from 'management/Manage';
 
 function manage() {

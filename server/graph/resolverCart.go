@@ -98,7 +98,7 @@ func (r *Resolver) DeleteCartResolver(ctx context.Context, id int) (*model.Mutat
 
 // query
 
-func (r *queryResolver) GetAllCartItemsResolver(ctx context.Context, first, skip int) ([]*model.Product, error) {
+func (r *queryResolver) GetAllCartItemsResolver(ctx context.Context, first, skip int) ([]*model.ProductCartID, error) {
 	gc, err := GinContextFromContext(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("gin context convert error: %v", err)
@@ -143,11 +143,11 @@ func (r *queryResolver) GetAllCartItemsResolver(ctx context.Context, first, skip
 		return nil, fmt.Errorf("GetCartResolver error : %v", err)
 	}
 
-	convertProc := make([]*model.Product, 0)
+	convertProc := make([]*model.ProductCartID, 0)
 	for _, p := range products {
 		id := strconv.Itoa(int(p.ID))
 		cate := strconv.Itoa(int(p.Category))
-		convertProc = append(convertProc, &model.Product {
+		convertProc = append(convertProc, &model.ProductCartID {
 			ID: id,
 			ProductName: p.ProductName,
 			Description: p.Description.String,
@@ -159,6 +159,7 @@ func (r *queryResolver) GetAllCartItemsResolver(ctx context.Context, first, skip
 			Category: cate,
 			CreatedAt: p.CreatedAt,
 			UpdatedAt: p.UpdatedAt,
+			CartID: int(p.ID_2),
 		})
 	}
 

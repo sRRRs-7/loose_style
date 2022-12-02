@@ -87,3 +87,9 @@ export const tokenState = atom<boolean>({
     key: 'tokenState',
     default: false,
 });
+
+// cart modal state
+export const cartIdState = atom<number>({
+    key: 'cartIdState',
+    default: 0,
+});

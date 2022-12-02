@@ -295,10 +295,26 @@ export type Product = Node & {
   updated_at: Scalars['Time'];
 };
 
+export type Product_CartId = Node & {
+  __typename?: 'Product_cartId';
+  brand: Scalars['Int'];
+  cart_id: Scalars['Int'];
+  category: Scalars['String'];
+  created_at: Scalars['Time'];
+  description: Scalars['String'];
+  discount: Scalars['Float'];
+  id: Scalars['ID'];
+  img: Scalars['String'];
+  product_name: Scalars['String'];
+  stock: Scalars['Int'];
+  unit_price: Scalars['Int'];
+  updated_at: Scalars['Time'];
+};
+
 export type Query = {
   __typename?: 'Query';
   _allPostsMeta: PostsMeta;
-  getAllCartItems: Array<Product>;
+  getAllCartItems: Array<Product_CartId>;
   getAllMedia: Array<Maybe<Media>>;
   getAllOrders: Array<Order>;
   getAllPosts: Array<Post>;
@@ -427,13 +443,20 @@ export type GetCartItemMutationVariables = Exact<{
 
 export type GetCartItemMutation = { __typename?: 'Mutation', getCartItem: { __typename?: 'Product', id: string, product_name: string, description: string, img: string, unit_price: number, discount: number, stock: number, brand: number, category: string, created_at: any } };
 
+export type DeleteCartMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteCartMutation = { __typename?: 'Mutation', deleteCart: { __typename?: 'MutationResponse', is_error: boolean, message: string } };
+
 export type GetAllCartItemsQueryVariables = Exact<{
   first: Scalars['Int'];
   skip: Scalars['Int'];
 }>;
 
 
-export type GetAllCartItemsQuery = { __typename?: 'Query', getAllCartItems: Array<{ __typename?: 'Product', id: string, product_name: string, description: string, img: string, unit_price: number, discount: number, stock: number, brand: number, category: string, created_at: any }> };
+export type GetAllCartItemsQuery = { __typename?: 'Query', getAllCartItems: Array<{ __typename?: 'Product_cartId', id: string, product_name: string, description: string, img: string, unit_price: number, discount: number, stock: number, brand: number, category: string, created_at: any, cart_id: number }> };
 
 export type CreateCategoryMutationVariables = Exact<{
   category: Scalars['String'];
@@ -709,6 +732,27 @@ export const useGetCartItemMutation = <
       (variables?: GetCartItemMutationVariables) => fetcher<GetCartItemMutation, GetCartItemMutationVariables>(client, GetCartItemDocument, variables, headers)(),
       options
     );
+export const DeleteCartDocument = `
+    mutation deleteCart($id: Int!) {
+  deleteCart(id: $id) {
+    is_error
+    message
+  }
+}
+    `;
+export const useDeleteCartMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<DeleteCartMutation, TError, DeleteCartMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<DeleteCartMutation, TError, DeleteCartMutationVariables, TContext>(
+      ['deleteCart'],
+      (variables?: DeleteCartMutationVariables) => fetcher<DeleteCartMutation, DeleteCartMutationVariables>(client, DeleteCartDocument, variables, headers)(),
+      options
+    );
 export const GetAllCartItemsDocument = `
     query getAllCartItems($first: Int!, $skip: Int!) {
   getAllCartItems(first: $first, skip: $skip) {
@@ -722,6 +766,7 @@ export const GetAllCartItemsDocument = `
     brand
     category
     created_at
+    cart_id
   }
 }
     `;

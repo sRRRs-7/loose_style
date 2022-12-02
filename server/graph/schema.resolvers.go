@@ -227,7 +227,7 @@ func (r *queryResolver) GetAllProducts(ctx context.Context, first int, skip int)
 	return res, nil
 }
 
-func (r *queryResolver) GetAllCartItems(ctx context.Context, first int, skip int) ([]*model.Product, error) {
+func (r *queryResolver) GetAllCartItems(ctx context.Context, first int, skip int) ([]*model.ProductCartID, error) {
 	res, err := r.GetAllCartItemsResolver(ctx, first, skip)
 	if err != nil {
 		return nil, fmt.Errorf("GetCartItem error: %v", err)

@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"time"
 )
 
 const createCartItem = `-- name: CreateCartItem :one
@@ -40,7 +42,7 @@ func (q *Queries) DeleteCartItem(ctx context.Context, id int64) error {
 }
 
 const getAllCartItem = `-- name: GetAllCartItem :many
-SELECT p.id, p.product_name, p.description, p.img, p.unit_price, p.discount, p.stock, p.brand_id, p.category, p.created_at, p.updated_at FROM carts AS c
+SELECT p.id, p.product_name, p.description, p.img, p.unit_price, p.discount, p.stock, p.brand_id, p.category, p.created_at, p.updated_at, c.id FROM carts AS c
 INNER JOIN users AS u ON c.user_id = u.id
 INNER JOIN products AS p ON c.product_id = p.id
 WHERE c.user_id = $1
@@ -55,15 +57,30 @@ type GetAllCartItemParams struct {
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) GetAllCartItem(ctx context.Context, arg GetAllCartItemParams) ([]*Products, error) {
+type GetAllCartItemRow struct {
+	ID          int64          `json:"id"`
+	ProductName string         `json:"product_name"`
+	Description sql.NullString `json:"description"`
+	Img         sql.NullString `json:"img"`
+	UnitPrice   int32          `json:"unit_price"`
+	Discount    float64        `json:"discount"`
+	Stock       int32          `json:"stock"`
+	BrandID     int64          `json:"brand_id"`
+	Category    int64          `json:"category"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	ID_2        int64          `json:"id_2"`
+}
+
+func (q *Queries) GetAllCartItem(ctx context.Context, arg GetAllCartItemParams) ([]*GetAllCartItemRow, error) {
 	rows, err := q.db.Query(ctx, getAllCartItem, arg.UserID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []*Products{}
+	items := []*GetAllCartItemRow{}
 	for rows.Next() {
-		var i Products
+		var i GetAllCartItemRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.ProductName,
@@ -76,6 +93,7 @@ func (q *Queries) GetAllCartItem(ctx context.Context, arg GetAllCartItemParams) 
 			&i.Category,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.ID_2,
 		); err != nil {
 			return nil, err
 		}
