@@ -3,7 +3,7 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './CartModal.module.scss';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
-import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
+import { adminClient, NewHeader, option } from '@/graphql/client/client';
 import { useDeleteCartMutation, GetCartItemMutationVariables } from '@/graphql/types/graphql';
 import { RemoveCookie } from 'utils/cookie';
 
@@ -18,19 +18,22 @@ function CartModal() {
     const [____, setIsGetCart] = useRecoilState<boolean>(getAllCartState);
 
     // delete a cart mutation
-    const deleteMutation = useDeleteCartMutation(adminClient, option, NewAdminHeader());
+    const deleteMutation = useDeleteCartMutation(adminClient, option, NewHeader());
 
+    // close modal
     function modalCloseHandler() {
         setIsCartModal(false);
     }
 
     // delete a cart item mutation
     function deleteHandler(id: number) {
+        console.log(id);
         const deleteVariable: GetCartItemMutationVariables = { id: id };
         deleteMutation
             .mutateAsync(deleteVariable, option)
             .then((res) => {
                 setIsGetCart(true);
+                setIsCartModal(false);
             })
             .catch((err) => {
                 if (err.response.status == 401) {
@@ -38,7 +41,7 @@ function CartModal() {
                     window.location.href = '/login';
                 }
             });
-        window.location.reload();
+        // window.location.reload();
     }
 
     return (
@@ -69,7 +72,6 @@ function CartModal() {
                     <div
                         onClick={() => {
                             deleteHandler(cartId);
-                            setIsCartModal(false);
                         }}
                     >
                         <DeleteOutlineTwoToneIcon className={styles.trash} />

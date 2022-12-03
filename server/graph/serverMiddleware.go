@@ -61,7 +61,6 @@ func CookieMiddleware(config cfg.Config) gin.HandlerFunc {
 	}
 }
 
-
 const (
 	authorizationHeaderKey  = "authorization"
 	authorizationTypeBearer = "bearer"
@@ -74,6 +73,12 @@ func GinContextRedisMiddleware(tokenMaker token.Maker, config cfg.Config) gin.Ha
 	return func(c *gin.Context) {
 		// verify header
 		authorizationHeader := c.GetHeader(authorizationHeaderKey)
+		if strings.Contains(authorizationHeader, "undefined") {
+			err := errors.New("authorization header is undefined")
+			fmt.Println("authorization header is undefined")
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))
+			return
+		}
 		if len(authorizationHeader) == 0 {
 			err := errors.New("authorization header is not provide")
 			fmt.Println("authorization header is not provide")

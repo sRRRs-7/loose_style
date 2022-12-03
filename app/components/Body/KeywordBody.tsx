@@ -81,9 +81,13 @@ function KeywordBody() {
         <>
             {isGetProductModal && <Modal />}
 
-            {products?.length == 0 && (
+            {products?.length == 0 ? (
                 <div className={styles.flex_box}>
                     <p>No items</p>
+                </div>
+            ) : (
+                <div className={styles.flex_box}>
+                    <p>{products?.length} items</p>
                 </div>
             )}
 

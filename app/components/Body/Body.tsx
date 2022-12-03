@@ -11,11 +11,11 @@ import KeywordBody from './KeywordBody';
 import Loading from './Loading';
 
 function Body() {
-    const [path, setPath] = useRecoilState<string>(pathState);
+    const [_, setPath] = useRecoilState<string>(pathState);
     // fetch condition state
-    const [isTop, _] = useRecoilState<boolean>(topBodyState); // share top body component
-    const [isCategorySearch, __] = useRecoilState<boolean>(categorySearchState); // share category component
-    const [isKeywordSearch, ___] = useRecoilState<boolean>(keywordSearchState); // share header component
+    const [isTop, __] = useRecoilState<boolean>(topBodyState); // share top body component
+    const [isCategorySearch, ___] = useRecoilState<boolean>(categorySearchState); // share category component
+    const [isKeywordSearch, ____] = useRecoilState<boolean>(keywordSearchState); // share header component
     // spinner timer
     const [isFetch, setIsFetch] = useState(true);
 

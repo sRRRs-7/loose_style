@@ -1,10 +1,13 @@
 get all cart
     -> user id get from redis -> sorted by user id -> SQL distinct count
+    -> cart modal delete -> async fetch update display for SPA
+    OK
 
 add cart
     -> user id (pk) + product id (pk)
     - user id get from redis
     - product id get from client side
+    OK
 
 purchase button function
     -> payment API stripe

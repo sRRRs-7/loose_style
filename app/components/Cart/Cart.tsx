@@ -28,8 +28,6 @@ function Cart() {
     const [___, setProduct] = useRecoilState<any>(productState);
     // receive cart id from top cart page
     const [____, setDeleteCartId] = useRecoilState<number>(cartIdState);
-    // status
-    const [err, setErr] = useState(false);
     // get a cart args
     const [cartId, setCartId] = useState<number>(0);
     const [isGetCart, setIsGetCart] = useRecoilState<boolean>(getAllCartState);
@@ -40,7 +38,11 @@ function Cart() {
 
     // get all cart
     const getAllVariable: GetAllCartItemsQueryVariables = { first: 30, skip: 30 * (page - 1) };
-    const { data, isError } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, NewHeader());
+    const { data, isError, refetch } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, NewHeader());
+    // session timeout -> remove cookie
+    if (isError) {
+        RemoveCookie();
+    }
 
     // get a cart mutation
     const getVariable: GetCartItemMutationVariables = { id: cartId };
@@ -58,11 +60,19 @@ function Cart() {
                 .catch((err) => {
                     if (err.response.status == 401) {
                         RemoveCookie();
-                        router.push('/');
+                        router.push('/login');
                     }
-                    setErr(true);
                 });
         }
+
+        // get all cart refetch
+        refetch()
+            .then((res) => {
+                console.log(res.data?.getAllCartItems);
+            })
+            .catch((err) => {
+                console.log(err.response.status);
+            });
     }, [isCateModal, cartId, isGetCart]);
 
     // show modal
@@ -80,10 +90,6 @@ function Cart() {
         });
     }
 
-    // session timeout -> remove cookie
-    if (isError) {
-        RemoveCookie();
-    }
     // initial loading spinner
     useEffect(() => {
         setTimeout(() => {
@@ -104,15 +110,13 @@ function Cart() {
 
             <div>{isCateModal && <CartModal />}</div>
 
-            {err && (
-                <div className={styles.err}>
-                    <p>No contents</p>
-                </div>
-            )}
-
-            {data?.getAllCartItems.length == 0 && (
+            {data?.getAllCartItems.length == 0 ? (
                 <div className={styles.flex_box}>
                     <p>No items</p>
+                </div>
+            ) : (
+                <div className={styles.flex_box_items}>
+                    <p>{data?.getAllCartItems.length} items</p>
                 </div>
             )}
 
@@ -124,7 +128,7 @@ function Cart() {
                             key={c.id}
                             onClick={() => {
                                 cartModalHandler(parseInt(c.id));
-                                setDeleteCartId(c.cart_id);
+                                setDeleteCartId(c.cart_id); // delete cart pk
                             }}
                         >
                             <p>{c.id}</p>

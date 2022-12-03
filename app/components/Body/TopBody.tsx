@@ -56,9 +56,13 @@ function TopBody() {
         <>
             {isGetProductModal && <Modal />}
 
-            {data?.getAllProducts.length == 0 && (
+            {data?.getAllProducts.length == 0 ? (
                 <div className={styles.flex_box}>
                     <p>No items</p>
+                </div>
+            ) : (
+                <div className={styles.flex_box}>
+                    <p>{data?.getAllProducts.length} items</p>
                 </div>
             )}
 
