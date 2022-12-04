@@ -146,12 +146,6 @@ type AuthUser implements Node {
     sex: String!
 }
 
-type Address_user {
-    id: ID!
-    user_id: String!
-    address_id: Int!
-}
-
 type Address implements Node {
     id: ID!
     address_id: Int!
@@ -229,3 +223,4 @@ enum Category {
 }
 
 scalar Time
+scalar UUID

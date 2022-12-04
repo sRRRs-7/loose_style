@@ -3,8 +3,8 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './CartModal.module.scss';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
-import { adminClient, NewHeader, option } from '@/graphql/client/client';
-import { useDeleteCartMutation, GetCartItemMutationVariables } from '@/graphql/types/graphql';
+import { adminClient, NewHeader, option } from 'graphql/client/client';
+import { useDeleteCartMutation, GetCartItemMutationVariables } from 'graphql/types/graphql';
 import { RemoveCookie } from 'utils/cookie';
 
 function CartModal() {

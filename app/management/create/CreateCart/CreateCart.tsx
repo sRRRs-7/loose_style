@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateCart.module.scss';
-import { useCreateAdminCartMutation, CreateAdminCartMutationVariables } from '../../../src/graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
+import { useCreateAdminCartMutation, CreateAdminCartMutationVariables } from '../../../graphql/types/graphql';
+import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateCart() {

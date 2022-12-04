@@ -18,7 +18,6 @@ export type Scalars = {
   Int: number;
   Float: number;
   Time: any;
-  UUID: any;
 };
 
 export type Address = Node & {
@@ -33,6 +32,13 @@ export type Address = Node & {
   postcode: Scalars['Int'];
   prefecture_code: Scalars['String'];
   street: Scalars['String'];
+};
+
+export type Address_User = {
+  __typename?: 'Address_user';
+  address_id: Scalars['Int'];
+  id: Scalars['ID'];
+  user_id: Scalars['String'];
 };
 
 export type AuthUser = Node & {

@@ -7,8 +7,8 @@ import {
     useGetAllCartItemsQuery,
     GetCartItemMutationVariables,
     useGetCartItemMutation,
-} from '../../src/graphql/types/graphql';
-import { option, adminClient, NewHeader } from '@/graphql/client/client';
+} from '../../graphql/types/graphql';
+import { option, adminClient, NewHeader } from 'graphql/client/client';
 import Pagination from 'components/Body/Pagination/Pagination';
 import { RemoveCookie } from 'utils/cookie';
 import { useRouter } from 'next/router';
@@ -125,10 +125,10 @@ function Cart() {
                     {data?.getAllCartItems.map((c) => (
                         <div
                             className={styles.grid_items}
-                            key={c.id}
+                            key={c.cart_id}
                             onClick={() => {
                                 cartModalHandler(parseInt(c.id));
-                                setDeleteCartId(c.cart_id); // delete cart pk
+                                setDeleteCartId(c.cart_id); // delete cart arg(pk)
                             }}
                         >
                             <p>{c.id}</p>

@@ -7,8 +7,8 @@ import {
     useGetAllProductsQuery,
     GetProductMutationVariables,
     useGetProductMutation,
-} from '../../src/graphql/types/graphql';
-import { tokenClient, option, NewAdminHeader } from '../../src/graphql/client/client';
+} from '../../graphql/types/graphql';
+import { tokenClient, option, NewAdminHeader } from '../../graphql/client/client';
 import Modal from './Modal/Modal';
 
 function TopBody() {
@@ -39,9 +39,14 @@ function TopBody() {
         setIsKeywordSearch(false);
         // get product fetch
         if (isGetProductModal) {
-            getProductMutation.mutateAsync(getProductVariable, option).then((res) => {
-                setProduct(res.getProduct); // set product for modal
-            });
+            getProductMutation
+                .mutateAsync(getProductVariable, option)
+                .then((res) => {
+                    setProduct(res.getProduct); // set product for modal
+                })
+                .catch((err) => {
+                    console.log(err.response.status);
+                });
         }
     }, [page, isGetProductModal, productId]); // dependency fetch input value and condition
 

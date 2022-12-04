@@ -2,8 +2,8 @@ import { getProductModalState, productState } from '../../../recoil/atom';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './Modal.module.scss';
-import { CreateCartMutationVariables, useCreateCartMutation } from '../../../src/graphql/types/graphql';
-import { adminClient, NewHeader, option } from '@/graphql/client/client';
+import { CreateCartMutationVariables, useCreateCartMutation } from '../../../graphql/types/graphql';
+import { adminClient, NewHeader, option } from 'graphql/client/client';
 import { GetCookie, RemoveCookie } from 'utils/cookie';
 import { useRouter } from 'next/router';
 

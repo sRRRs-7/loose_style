@@ -7,8 +7,8 @@ import {
     useGetAdminMutation,
     CreateAdminTokenMutationVariables,
     useCreateAdminTokenMutation,
-} from '../../../src/graphql/types/graphql';
-import { tokenClient, option, NewAdminHeader } from '../../../src/graphql/client/client';
+} from '../../../graphql/types/graphql';
+import { tokenClient, option, NewAdminHeader } from '../../../graphql/client/client';
 import nookies from 'nookies';
 import { GetAdminCookie, GetCookie, SetAdminCookie } from 'utils/cookie';
 

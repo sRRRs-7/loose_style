@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateBrand.module.scss';
-import { useCreateBrandMutation, CreateBrandMutationVariables } from '../../../src/graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
+import { useCreateBrandMutation, CreateBrandMutationVariables } from '../../../graphql/types/graphql';
+import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateBrand() {

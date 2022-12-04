@@ -59,12 +59,6 @@ type ComplexityRoot struct {
 		Street                func(childComplexity int) int
 	}
 
-	Address_user struct {
-		AddressID func(childComplexity int) int
-		ID        func(childComplexity int) int
-		UserID    func(childComplexity int) int
-	}
-
 	AuthUser struct {
 		ID       func(childComplexity int) int
 		Sex      func(childComplexity int) int
@@ -330,27 +324,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Address.Street(childComplexity), true
-
-	case "Address_user.address_id":
-		if e.complexity.Address_user.AddressID == nil {
-			break
-		}
-
-		return e.complexity.Address_user.AddressID(childComplexity), true
-
-	case "Address_user.id":
-		if e.complexity.Address_user.ID == nil {
-			break
-		}
-
-		return e.complexity.Address_user.ID(childComplexity), true
-
-	case "Address_user.user_id":
-		if e.complexity.Address_user.UserID == nil {
-			break
-		}
-
-		return e.complexity.Address_user.UserID(childComplexity), true
 
 	case "AuthUser.id":
 		if e.complexity.AuthUser.ID == nil {
@@ -1462,12 +1435,6 @@ type AuthUser implements Node {
   sex: String!
 }
 
-type Address_user {
-  id: ID!
-  user_id: String!
-  address_id: Int!
-}
-
 type Address implements Node {
   id: ID!
   address_id: Int!
@@ -1545,6 +1512,7 @@ enum Category {
 }
 
 scalar Time
+scalar UUID
 `, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -2908,138 +2876,6 @@ func (ec *executionContext) fieldContext_Address_phone(ctx context.Context, fiel
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Address_user_id(ctx context.Context, field graphql.CollectedField, obj *model.AddressUser) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Address_user_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Address_user_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Address_user",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Address_user_user_id(ctx context.Context, field graphql.CollectedField, obj *model.AddressUser) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Address_user_user_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Address_user_user_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Address_user",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Address_user_address_id(ctx context.Context, field graphql.CollectedField, obj *model.AddressUser) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Address_user_address_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AddressID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Address_user_address_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Address_user",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -10361,48 +10197,6 @@ func (ec *executionContext) _Address(ctx context.Context, sel ast.SelectionSet, 
 		case "phone":
 
 			out.Values[i] = ec._Address_phone(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var address_userImplementors = []string{"Address_user"}
-
-func (ec *executionContext) _Address_user(ctx context.Context, sel ast.SelectionSet, obj *model.AddressUser) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, address_userImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Address_user")
-		case "id":
-
-			out.Values[i] = ec._Address_user_id(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "user_id":
-
-			out.Values[i] = ec._Address_user_user_id(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "address_id":
-
-			out.Values[i] = ec._Address_user_address_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

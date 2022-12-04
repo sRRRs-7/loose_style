@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateUser.module.scss';
-import { useCreateUserMutation, CreateUserMutationVariables } from '../../../src/graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
+import { useCreateUserMutation, CreateUserMutationVariables } from '../../../graphql/types/graphql';
+import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateUser() {

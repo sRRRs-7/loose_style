@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateProduct.module.scss';
-import { useCreateProductMutation, CreateProductMutationVariables } from '../../../src/graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
+import { useCreateProductMutation, CreateProductMutationVariables } from '../../../graphql/types/graphql';
+import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateProduct() {

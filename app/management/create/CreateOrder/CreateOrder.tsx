@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateOrder.module.scss';
-import { useCreateOrderMutation, CreateOrderMutationVariables } from '../../../src/graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
+import { useCreateOrderMutation, CreateOrderMutationVariables } from '../../../graphql/types/graphql';
+import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateOrder() {

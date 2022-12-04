@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateCategory.module.scss';
-import { useCreateCategoryMutation, CreateCategoryMutationVariables } from '../../../src/graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from '@/graphql/client/client';
+import { useCreateCategoryMutation, CreateCategoryMutationVariables } from '../../../graphql/types/graphql';
+import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateCategory() {

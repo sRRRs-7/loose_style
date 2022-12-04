@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './Signup.module.scss';
 import router, { useRouter } from 'next/router';
-import { CreateUserMutationVariables, useCreateUserMutation } from '../../src/graphql/types/graphql';
-import { tokenClient, option, NewHeader } from '../../src/graphql/client/client';
+import { CreateUserMutationVariables, useCreateUserMutation } from '../../graphql/types/graphql';
+import { tokenClient, option, NewHeader } from '../../graphql/client/client';
 
 function Signup() {
     const [__, setPath] = useRecoilState<string>(pathState);

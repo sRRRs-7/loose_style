@@ -28,12 +28,6 @@ type Address struct {
 
 func (Address) IsNode() {}
 
-type AddressUser struct {
-	ID        string `json:"id"`
-	UserID    string `json:"user_id"`
-	AddressID int    `json:"address_id"`
-}
-
 type AuthUser struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`

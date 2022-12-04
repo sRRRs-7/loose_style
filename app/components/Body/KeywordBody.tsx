@@ -7,7 +7,6 @@ import {
     keywordSearchState,
     keywordState,
     pageState,
-    pathState,
     productState,
     topBodyState,
 } from '../../recoil/atom';
@@ -17,9 +16,8 @@ import {
     GetAllProductsByKeywordMutationVariables,
     useGetAllProductsByKeywordMutation,
     SortBy,
-} from '../../src/graphql/types/graphql';
-import { tokenClient, option, NewAdminHeader } from '../../src/graphql/client/client';
-import Loading from './Loading';
+} from '../../graphql/types/graphql';
+import { tokenClient, option, NewAdminHeader } from '../../graphql/client/client';
 import Modal from './Modal/Modal';
 
 function KeywordBody() {
@@ -57,16 +55,26 @@ function KeywordBody() {
 
         // search keyword
         if (isKeywordSearch) {
-            getProductByKeywordMutation.mutateAsync(getProductByKeywordVariable, option).then((res) => {
-                setProducts(res.getAllProductsByKeyword);
-            });
+            getProductByKeywordMutation
+                .mutateAsync(getProductByKeywordVariable, option)
+                .then((res) => {
+                    setProducts(res.getAllProductsByKeyword);
+                })
+                .catch((err) => {
+                    console.log(err.response.status);
+                });
         }
 
         // get product
         if (isGetProductModal) {
-            getProductMutation.mutateAsync(getProductVariable, option).then((res) => {
-                setProduct(res.getProduct); // set product for modal
-            });
+            getProductMutation
+                .mutateAsync(getProductVariable, option)
+                .then((res) => {
+                    setProduct(res.getProduct); // set product for modal
+                })
+                .catch((err) => {
+                    console.log(err.response.status);
+                });
         }
     }, [page, keyword, isKeywordSearch, productId]); // dependency fetch input value and condition
 

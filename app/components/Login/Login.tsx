@@ -3,13 +3,8 @@ import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './Login.module.scss';
-import {
-    CreateTokenMutationVariables,
-    LoginUserMutationVariables,
-    useCreateTokenMutation,
-    useLoginUserMutation,
-} from '../../src/graphql/types/graphql';
-import { tokenClient, option, NewHeader } from '@/graphql/client/client';
+import { CreateTokenMutationVariables, LoginUserMutationVariables, useCreateTokenMutation, useLoginUserMutation } from '../../graphql/types/graphql';
+import { tokenClient, option, NewHeader } from 'graphql/client/client';
 import { GetCookie, SetCookie } from 'utils/cookie';
 
 function Login() {

@@ -9,6 +9,9 @@ add cart
     - product id get from client side
     OK
 
+cart duplicate value -> distinct clause -> count
+    on hold
+
 purchase button function
     -> payment API stripe
 

@@ -15,17 +15,20 @@ import {
     useGetProductMutation,
     GetAllProductByCategoryMutationVariables,
     useGetAllProductByCategoryMutation,
-} from '../../src/graphql/types/graphql';
-import { tokenClient, option, NewHeader, NewAdminHeader } from '../../src/graphql/client/client';
+} from '../../graphql/types/graphql';
+import { tokenClient, option, NewHeader, NewAdminHeader } from '../../graphql/client/client';
 import Modal from './Modal/Modal';
 
 function CategoryBody() {
     const [page, _] = useRecoilState<number>(pageState);
-    // fetch condition state
-    const [__, setIsTop] = useRecoilState<boolean>(topBodyState); // share top body component
-    const [isCategorySearch, setIsCategorySearch] = useRecoilState<boolean>(categorySearchState); // share category component
-    const [____, setIsKeywordSearch] = useRecoilState<boolean>(keywordSearchState); // share header component
-    const [isGetProductModal, setIsGetProductModal] = useRecoilState<boolean>(getProductModalState); // get product and show modal
+    // share top body component
+    const [__, setIsTop] = useRecoilState<boolean>(topBodyState);
+    // share category component
+    const [isCategorySearch, setIsCategorySearch] = useRecoilState<boolean>(categorySearchState);
+    // share header component
+    const [____, setIsKeywordSearch] = useRecoilState<boolean>(keywordSearchState);
+    // get product and show modal
+    const [isGetProductModal, setIsGetProductModal] = useRecoilState<boolean>(getProductModalState);
     // input value
     const [category, _____] = useRecoilState<string>(categoryState); // share category component
     const [productId, setProductId] = useState<number>();
@@ -47,22 +50,32 @@ function CategoryBody() {
 
     // condition fetch -> exclusive own state reset logic
     useEffect(() => {
-        setIsCategorySearch(true);
-        setIsKeywordSearch(false);
-        setIsTop(false);
+        setIsCategorySearch(true); // category search component render
+        setIsKeywordSearch(false); // keyword search component render
+        setIsTop(false); // top search component render
 
         // search category
         if (isCategorySearch) {
-            getProductByCategoryMutation.mutateAsync(getProductByCategoryVariable, option).then((res) => {
-                setProducts(res.getAllProductsByCategory);
-            });
+            getProductByCategoryMutation
+                .mutateAsync(getProductByCategoryVariable, option)
+                .then((res) => {
+                    setProducts(res.getAllProductsByCategory);
+                })
+                .catch((err) => {
+                    console.log(err.response.status);
+                });
         }
 
         // get product
         if (isGetProductModal) {
-            getProductMutation.mutateAsync(getProductVariable, option).then((res) => {
-                setProduct(res.getProduct); // set product for modal
-            });
+            getProductMutation
+                .mutateAsync(getProductVariable, option)
+                .then((res) => {
+                    setProduct(res.getProduct); // set product for modal
+                })
+                .catch((err) => {
+                    console.log(err.response.status);
+                });
         }
     }, [page, category, isCategorySearch, productId]); // dependency fetch input value and condition
 
