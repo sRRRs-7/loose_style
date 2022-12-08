@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateMedia.module.scss';
 import { useCreateMediaMutation, CreateMediaMutationVariables } from '../../../graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
+import { client, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateMedia() {
@@ -17,7 +17,7 @@ function CreateMedia() {
         img: img,
     };
 
-    const mutation = useCreateMediaMutation(adminClient, option, NewAdminHeader());
+    const mutation = useCreateMediaMutation(client, option, NewAdminHeader());
 
     function changeHandlerTitle(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

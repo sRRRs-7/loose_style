@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateUser.module.scss';
 import { useCreateUserMutation, CreateUserMutationVariables } from '../../../graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
+import { client, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateUser() {
@@ -39,7 +39,7 @@ function CreateUser() {
         building: building,
         phone: phone!,
     };
-    const mutation = useCreateUserMutation(adminClient, option, NewAdminHeader());
+    const mutation = useCreateUserMutation(client, option, NewAdminHeader());
 
     function changeHandlerUserID(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

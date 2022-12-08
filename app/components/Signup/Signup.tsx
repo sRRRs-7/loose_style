@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import styles from './Signup.module.scss';
 import router, { useRouter } from 'next/router';
 import { CreateUserMutationVariables, useCreateUserMutation } from '../../graphql/types/graphql';
-import { tokenClient, option, NewHeader } from '../../graphql/client/client';
+import { client, option, NewHeader } from '../../graphql/client/client';
 
 function Signup() {
     const [__, setPath] = useRecoilState<string>(pathState);
@@ -44,7 +44,7 @@ function Signup() {
         building: building,
         phone: phone!,
     };
-    const mutation = useCreateUserMutation(tokenClient, option, NewHeader());
+    const mutation = useCreateUserMutation(client, option, NewHeader());
 
     function changeHandlerUserID(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

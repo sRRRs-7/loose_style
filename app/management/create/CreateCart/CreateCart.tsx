@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateCart.module.scss';
 import { useCreateAdminCartMutation, CreateAdminCartMutationVariables } from '../../../graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
+import { client, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateCart() {
@@ -15,7 +15,7 @@ function CreateCart() {
         user_id: userId!,
         product_id: productId!,
     };
-    const mutation = useCreateAdminCartMutation(adminClient, option, NewAdminHeader());
+    const mutation = useCreateAdminCartMutation(client, option, NewAdminHeader());
 
     function changeHandlerUserId(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

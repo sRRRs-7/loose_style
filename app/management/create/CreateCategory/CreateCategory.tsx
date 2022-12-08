@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateCategory.module.scss';
 import { useCreateCategoryMutation, CreateCategoryMutationVariables } from '../../../graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
+import { client, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateCategory() {
@@ -12,7 +12,7 @@ function CreateCategory() {
 
     // mutation
     const variable: CreateCategoryMutationVariables = { category: category };
-    const mutation = useCreateCategoryMutation(adminClient, option, NewAdminHeader());
+    const mutation = useCreateCategoryMutation(client, option, NewAdminHeader());
 
     function changeHandlerCategory(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

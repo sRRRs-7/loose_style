@@ -3,7 +3,7 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './Modal.module.scss';
 import { CreateCartMutationVariables, useCreateCartMutation } from '../../../graphql/types/graphql';
-import { adminClient, NewHeader, option } from 'graphql/client/client';
+import { client, NewHeader, option } from 'graphql/client/client';
 import { GetCookie, RemoveCookie } from 'utils/cookie';
 import { useRouter } from 'next/router';
 
@@ -12,7 +12,7 @@ function Modal() {
     const [product, __] = useRecoilState<any>(productState); // get product modal value
 
     // create cart mutation
-    const addCartMutation = useCreateCartMutation(adminClient, option, NewHeader());
+    const addCartMutation = useCreateCartMutation(client, option, NewHeader());
 
     const router = useRouter();
 

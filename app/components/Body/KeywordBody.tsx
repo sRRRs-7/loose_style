@@ -17,7 +17,7 @@ import {
     useGetAllProductsByKeywordMutation,
     SortBy,
 } from '../../graphql/types/graphql';
-import { tokenClient, option, NewAdminHeader } from '../../graphql/client/client';
+import { client, option, NewAdminHeader } from '../../graphql/client/client';
 import Modal from './Modal/Modal';
 
 function KeywordBody() {
@@ -41,11 +41,11 @@ function KeywordBody() {
         first: 30,
         skip: 30 * (page - 1),
     };
-    const getProductByKeywordMutation = useGetAllProductsByKeywordMutation(tokenClient, option, NewAdminHeader());
+    const getProductByKeywordMutation = useGetAllProductsByKeywordMutation(client, option, NewAdminHeader());
 
     // get a product handler -> display modal
     const getProductVariable: GetProductMutationVariables = { product_id: productId! };
-    const getProductMutation = useGetProductMutation(tokenClient, option, NewAdminHeader());
+    const getProductMutation = useGetProductMutation(client, option, NewAdminHeader());
 
     // condition fetch -> exclusive own state reset logic
     useEffect(() => {

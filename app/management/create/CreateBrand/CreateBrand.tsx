@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateBrand.module.scss';
 import { useCreateBrandMutation, CreateBrandMutationVariables } from '../../../graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
+import { client, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateBrand() {
@@ -11,7 +11,7 @@ function CreateBrand() {
     const [success, setSuccess] = useState(false);
 
     const variable: CreateBrandMutationVariables = { brand: brand };
-    const mutation = useCreateBrandMutation(adminClient, option, NewAdminHeader());
+    const mutation = useCreateBrandMutation(client, option, NewAdminHeader());
 
     function changeHandlerBrand(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

@@ -20,38 +20,35 @@ var config cfg.Config
 var err error
 var pool *pgxpool.Pool
 
-
 // create zerolog instance
 func CreateLogger() zerolog.Logger {
-    logger := zerolog.New(
-        os.Stdout,
-    ).Level(zerolog.DebugLevel).With().Timestamp().Logger()
-    logger.Err(os.ErrInvalid).Send()
-    logger.Error().Interface("error", errs.Wrap(os.ErrInvalid)).Msg("sample error")
-    return zerolog.Logger{}
+	logger := zerolog.New(
+		os.Stdout,
+	).Level(zerolog.DebugLevel).With().Timestamp().Logger()
+	logger.Err(os.ErrInvalid).Send()
+	logger.Error().Interface("error", errs.Wrap(os.ErrInvalid)).Msg("sample error")
+	return zerolog.Logger{}
 }
 
-
 func pgxConnection() {
-   // get logger
+	// get logger
 	logger := CreateLogger()
 
 	// create connection pool for PostgreSQL service
 	cfg, err := pgxpool.ParseConfig(config.DBsource)
 	if err != nil {
-			logger.Error().Interface("error", errs.Wrap(err)).Send()
-			log.Fatalf("pgx configuration error: %v", err)
+		logger.Error().Interface("error", errs.Wrap(err)).Send()
+		log.Fatalf("pgx configuration error: %v", err)
 	}
 	cfg.ConnConfig.Logger = zerologadapter.NewLogger(logger)
 	cfg.ConnConfig.LogLevel = pgx.LogLevelDebug
 
 	pool, err = pgxpool.ConnectConfig(context.TODO(), cfg)
 	if err != nil {
-			logger.Error().Interface("error", errs.Wrap(err)).Send()
-			log.Fatalf("cannot connect to database: %v", err)
+		logger.Error().Interface("error", errs.Wrap(err)).Send()
+		log.Fatalf("cannot connect to database: %v", err)
 	}
 }
-
 
 // root function
 func main() {
@@ -72,11 +69,3 @@ func main() {
 
 	resolver.GinRouter(tokenMaker)
 }
-
-
-
-
-
-
-
-

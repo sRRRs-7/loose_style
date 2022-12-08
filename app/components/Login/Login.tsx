@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './Login.module.scss';
 import { CreateTokenMutationVariables, LoginUserMutationVariables, useCreateTokenMutation, useLoginUserMutation } from '../../graphql/types/graphql';
-import { tokenClient, option, NewHeader } from 'graphql/client/client';
+import { client, option, NewHeader } from 'graphql/client/client';
 import { GetCookie, SetCookie } from 'utils/cookie';
 
 function Login() {
@@ -17,11 +17,11 @@ function Login() {
 
     // login mutation
     var variable: LoginUserMutationVariables = { user_id: userId, password: password };
-    const loginMutation = useLoginUserMutation(tokenClient, option, NewHeader());
+    const loginMutation = useLoginUserMutation(client, option, NewHeader());
 
     // token mutation
     const tokenVariable: CreateTokenMutationVariables = { user_id: userId };
-    const tokenMutation = useCreateTokenMutation(tokenClient, option, NewHeader());
+    const tokenMutation = useCreateTokenMutation(client, option, NewHeader());
 
     function changeHandlerId(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

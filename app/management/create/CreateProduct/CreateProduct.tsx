@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateProduct.module.scss';
 import { useCreateProductMutation, CreateProductMutationVariables } from '../../../graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
+import { client, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateProduct() {
@@ -27,7 +27,7 @@ function CreateProduct() {
         brand: brandID!,
         category: categoryID!,
     };
-    const mutation = useCreateProductMutation(adminClient, option, NewAdminHeader());
+    const mutation = useCreateProductMutation(client, option, NewAdminHeader());
 
     function changeHandlerProductName(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

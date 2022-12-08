@@ -5,16 +5,15 @@ documents: 'graphql/resolver/*.graphql'
 generates:
     src/graphql/types/graphql.ts:
         plugins:
+            - add
             - typescript
             - typescript-operations
             - typescript-react-query
         config:
-            fetcher: graphql-request
-            isReactHook: true
+            content:
+                - /* eslint-disable */
+                - // @ts-ignore
+            fetcher: '@/graphql/fetcher#fetcher'
             exposeQueryKeys: true
-
-        # legacyMode: true
-    # src/gql/backend/types.d.ts:
-    #     plugins:
-    #         - typescript
-    #         - typescript-resolvers
+            addInfiniteQuery: true
+            exposeFetcher: true

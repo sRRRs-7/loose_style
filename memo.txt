@@ -10,10 +10,9 @@ add cart
     OK
 
 cart duplicate value -> distinct clause -> count
-    on hold
+    on hold -> duplicate OK
 
-purchase button function
-    -> payment API stripe
+foreign API
 
 g-gram, morphological analysis
 

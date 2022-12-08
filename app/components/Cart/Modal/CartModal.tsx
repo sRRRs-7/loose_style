@@ -3,7 +3,7 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './CartModal.module.scss';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
-import { adminClient, NewHeader, option } from 'graphql/client/client';
+import { client, NewHeader, option } from 'graphql/client/client';
 import { useDeleteCartMutation, GetCartItemMutationVariables } from 'graphql/types/graphql';
 import { RemoveCookie } from 'utils/cookie';
 
@@ -18,7 +18,7 @@ function CartModal() {
     const [____, setIsGetCart] = useRecoilState<boolean>(getAllCartState);
 
     // delete a cart mutation
-    const deleteMutation = useDeleteCartMutation(adminClient, option, NewHeader());
+    const deleteMutation = useDeleteCartMutation(client, option, NewHeader());
 
     // close modal
     function modalCloseHandler() {

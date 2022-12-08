@@ -17,30 +17,19 @@ func (r *Resolver) GinRouter(tokenMaker token.Maker) {
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"192.168.1.2"})
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000", "http://localhost:8080"},
-		AllowMethods: []string{"POST", "GET", "PUT", "DELETE", "OPTIONS", "HEAD"},
-		AllowHeaders: []string{"Origin", "Content-Type", "Authorization", "Accept"},
+		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
+		AllowMethods:     []string{"POST", "GET", "PUT", "DELETE", "OPTIONS", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept"},
 		AllowCredentials: true,
-		MaxAge: 5 * time.Second,
+		MaxAge:           5 * time.Second,
 	}))
 
 	// create user token
 	playGroundRouter := router.Group("/") // cannot change
-	playGroundRouter.Use(GinContextToContextMiddleware(r.config))
+	playGroundRouter.Use(GinContextToContextMiddleware(tokenMaker))
 	playGroundRouter.Use(dataloaders.DataLoaderMiddleware(r.store))
 	playGroundRouter.POST("/query", graphqlHandler(r))
 	playGroundRouter.GET("/query", playgroundHandler())
-
-	// user router query only (login, logout)
-	userRouter := router.Group("/user")
-	userRouter.Use(CookieMiddleware(r.config))
-	userRouter.Use(dataloaders.DataLoaderMiddleware(r.store))
-	userRouter.POST("/loose", graphqlHandler(r))
-
-	// authRouter mutation only (management)
-	authRouter := router.Group("/admin")
-	authRouter.Use(GinContextRedisMiddleware(tokenMaker, r.config))
-	authRouter.POST("/loose", graphqlHandler(r))
 
 	// create logging files
 	f, _ := os.Create("gin.log")

@@ -8,7 +8,7 @@ import {
     GetCartItemMutationVariables,
     useGetCartItemMutation,
 } from '../../graphql/types/graphql';
-import { option, adminClient, NewHeader } from 'graphql/client/client';
+import { option, client, NewHeader } from 'graphql/client/client';
 import Pagination from 'components/Body/Pagination/Pagination';
 import { RemoveCookie } from 'utils/cookie';
 import { useRouter } from 'next/router';
@@ -38,7 +38,7 @@ function Cart() {
 
     // get all cart
     const getAllVariable: GetAllCartItemsQueryVariables = { first: 30, skip: 30 * (page - 1) };
-    const { data, isError, refetch } = useGetAllCartItemsQuery(adminClient, getAllVariable, option, NewHeader());
+    const { data, isError, refetch } = useGetAllCartItemsQuery(client, getAllVariable, option, NewHeader());
     // session timeout -> remove cookie
     if (isError) {
         RemoveCookie();
@@ -46,7 +46,7 @@ function Cart() {
 
     // get a cart mutation
     const getVariable: GetCartItemMutationVariables = { id: cartId };
-    const getMutation = useGetCartItemMutation(adminClient, option, NewHeader());
+    const getMutation = useGetCartItemMutation(client, option, NewHeader());
 
     useEffect(() => {
         setPath('/cart');

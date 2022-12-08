@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateOrder.module.scss';
 import { useCreateOrderMutation, CreateOrderMutationVariables } from '../../../graphql/types/graphql';
-import { adminClient, NewAdminHeader, option } from 'graphql/client/client';
+import { client, NewAdminHeader, option } from 'graphql/client/client';
 import { RemoveAdminCookie } from 'utils/cookie';
 
 function CreateOrder() {
@@ -23,7 +23,7 @@ function CreateOrder() {
         price: price!,
         status: status,
     };
-    const mutation = useCreateOrderMutation(adminClient, option, NewAdminHeader());
+    const mutation = useCreateOrderMutation(client, option, NewAdminHeader());
 
     function changeHandlerUserId(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault;

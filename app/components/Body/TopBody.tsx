@@ -8,7 +8,7 @@ import {
     GetProductMutationVariables,
     useGetProductMutation,
 } from '../../graphql/types/graphql';
-import { tokenClient, option, NewAdminHeader } from '../../graphql/client/client';
+import { client, option, NewAdminHeader } from '../../graphql/client/client';
 import Modal from './Modal/Modal';
 
 function TopBody() {
@@ -25,11 +25,11 @@ function TopBody() {
 
     // get all products
     const variable: GetAllProductsQueryVariables = { first: 30, skip: 30 * (page - 1) };
-    const { data, isError } = useGetAllProductsQuery(tokenClient, variable, option, NewAdminHeader());
+    const { data, isError } = useGetAllProductsQuery(client, variable, option, NewAdminHeader());
 
     // get a product handler -> display modal
     const getProductVariable: GetProductMutationVariables = { product_id: productId! };
-    const getProductMutation = useGetProductMutation(tokenClient, option, NewAdminHeader());
+    const getProductMutation = useGetProductMutation(client, option, NewAdminHeader());
 
     // condition fetch -> exclusive own state reset logic
     useEffect(() => {
