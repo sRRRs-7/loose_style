@@ -20,10 +20,10 @@ grpc
 
 postgres index
 
-aws
-terraform
 docker compose
 docker file
+aws
+terraform
 github actions CI test
 
 single test
