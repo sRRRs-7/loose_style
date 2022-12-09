@@ -24,9 +24,9 @@ func NewResolver(config cfg.Config, store db.Store) (*Resolver, token.Maker, err
 	dl := dataloaders.NewRetriever()
 	// api instance
 	resolver := &Resolver{
-		store: store,
-		tokenMaker: tokenMaker,
-		config: config,
+		store:       store,
+		tokenMaker:  tokenMaker,
+		config:      config,
 		dataloaders: *dl,
 	}
 
@@ -37,13 +37,13 @@ func NewResolver(config cfg.Config, store db.Store) (*Resolver, token.Maker, err
 func graphqlHandler(r *Resolver) gin.HandlerFunc {
 	// context store instance
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(
-		generated.Config {
-			Resolvers: &Resolver {
-				store: r.store,
-				tokenMaker: r.tokenMaker,
-				config: r.config,
+		generated.Config{
+			Resolvers: &Resolver{
+				store:       r.store,
+				tokenMaker:  r.tokenMaker,
+				config:      r.config,
 				dataloaders: r.dataloaders,
-	}}))
+			}}))
 
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)
@@ -52,7 +52,7 @@ func graphqlHandler(r *Resolver) gin.HandlerFunc {
 
 // Defining the Playground handler
 func playgroundHandler() gin.HandlerFunc {
-	h := playground.Handler("GraphQL", "/query")
+	h := playground.Handler("GraphQL", "/admin/query") // playground fetcher endpoint
 
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)

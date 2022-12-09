@@ -14,10 +14,10 @@ var rClient *redis.Client
 // auto execute before main function
 func init() {
 	rClient = redis.NewClient(&redis.Options{
-        Addr:     "localhost:6379",
-        Password: "", // no password set
-        DB:       0,  // use default DB
-    })
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
 }
 
 func NewRedis() *redis.Client {
@@ -37,21 +37,6 @@ func NewSession(gc *gin.Context, cookieKey string, accessToken string, info []by
 
 	return nil
 }
-
-// administrator session
-func NewAdminSession(gc *gin.Context, cookieKey string, accessToken string, info []byte, redisExpired time.Duration, cookieExpired int) error {
-	hashToken, err := cryptography.HashPassword(accessToken)
-	if err != nil {
-		return fmt.Errorf("new session error cannot convert hash token: %v", err)
-	}
-	// set redis
-	rClient.Set(gc, hashToken, info, redisExpired)
-	// set cookie
-	gc.SetCookie(cookieKey, hashToken, cookieExpired, "/manage", "localhost", false, true)
-
-	return nil
-}
-
 
 // check per access
 func GetSession(gc *gin.Context, accessToken string) interface{} {
@@ -73,7 +58,6 @@ func GetSession(gc *gin.Context, accessToken string) interface{} {
 	}
 	return redisValue
 }
-
 
 // usa logout
 func DeleteSession(gc *gin.Context, cookieKey string) {

@@ -24,19 +24,27 @@ func (r *Resolver) GinRouter(tokenMaker token.Maker) {
 		MaxAge:           5 * time.Second,
 	}))
 
-	// create user token
-	playGroundRouter := router.Group("/") // cannot change
+	// bearer auth router
+	playGroundRouter := router.Group("/")
 	playGroundRouter.Use(GinContextToContextMiddleware(tokenMaker))
 	playGroundRouter.Use(dataloaders.DataLoaderMiddleware(r.store))
 	playGroundRouter.POST("/query", graphqlHandler(r))
-	playGroundRouter.GET("/query", playgroundHandler())
+	playGroundRouter.GET("/query", graphqlHandler(r))
+
+	// bearer auth router
+	adminRouter := router.Group("/admin", gin.BasicAuth(gin.Accounts{
+		"srrrs": "secret",
+	}))
+	adminRouter.Use(GinContextMiddleware())
+	adminRouter.POST("/query", graphqlHandler(r))
+	adminRouter.GET("/query", playgroundHandler())
 
 	// create logging files
 	f, _ := os.Create("gin.log")
 	gin.DefaultWriter = io.MultiWriter(f)
 
 	// manage endpoint
-	fmt.Println("GraphQL playground: ", "http://localhost:8080/query")
+	fmt.Println("GraphQL playground: ", "http://localhost:8080/admin/query")
 	router.Run(r.config.HttpServerAddress)
 
 	//case TLS server

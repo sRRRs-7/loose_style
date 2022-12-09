@@ -5,7 +5,7 @@ COPY . .
 RUN go build -o main main.go
 
 #Run stage
-FROM alpine:3.17
+FROM golang:1.20-rc-alpine3.17
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY app.env .

@@ -101,6 +101,14 @@ func GinContextToContextMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 	}
 }
 
+func GinContextMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx := context.WithValue(c.Request.Context(), GinContextKey, c)
+		c.Request = c.Request.WithContext(ctx)
+		c.Next()
+	}
+}
+
 func errorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }

@@ -12,28 +12,28 @@ import (
 )
 
 type SortBy struct {
-	Asc string
+	Asc  string
 	Desc string
 }
 
 var EnumSort = SortBy{
-	Asc: "ASC",
+	Asc:  "ASC",
 	Desc: "DESC",
 }
 
 // mutation
 
 func (r *Resolver) CreateProductsResolver(
-		ctx context.Context,
-		productName string,
-		description string,
-		img string,
-		unitPrice int,
-		discount float64,
-		stock int,
-		brand int,
-		category int,
-	) (*model.MutationResponse, error) {
+	ctx context.Context,
+	productName string,
+	description string,
+	img string,
+	unitPrice int,
+	discount float64,
+	stock int,
+	brand int,
+	category int,
+) (*model.MutationResponse, error) {
 	res := &model.MutationResponse{
 		IsError: false,
 		Message: "crete a product OK",
@@ -46,17 +46,17 @@ func (r *Resolver) CreateProductsResolver(
 		return res, fmt.Errorf("gin context convert error: %v", err)
 	}
 
-	args := db.CreateProductParams {
+	args := db.CreateProductParams{
 		ProductName: productName,
 		Description: sql.NullString{String: description, Valid: true},
-		Img:  sql.NullString{String: description, Valid: true},
-		UnitPrice: int32(unitPrice),
-		Discount: discount,
-		Stock: int32(stock),
-		BrandID: int64(brand),
-		Category: int64(category),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Img:         sql.NullString{String: description, Valid: true},
+		UnitPrice:   int32(unitPrice),
+		Discount:    discount,
+		Stock:       int32(stock),
+		BrandID:     int64(brand),
+		Category:    int64(category),
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
 
 	err = r.store.CreateProduct(gc, args)
@@ -77,11 +77,11 @@ func (r *mutationResolver) GetAllProductsByKeywordResolver(ctx context.Context, 
 	}
 
 	// change necessary
-	args := db.ListProductByKeywordParams {
+	args := db.ListProductByKeywordParams{
 		Description: sql.NullString{String: keyword, Valid: true},
 		ProductName: keyword,
-		Limit: int32(first),
-		Offset: int32(skip),
+		Limit:       int32(first),
+		Offset:      int32(skip),
 	}
 
 	products, err := r.store.ListProductByKeyword(gc, args)
@@ -90,13 +90,13 @@ func (r *mutationResolver) GetAllProductsByKeywordResolver(ctx context.Context, 
 	}
 
 	if sortBy.String() == EnumSort.Asc || sortBy.String() == EnumSort.Desc {
-		} else {
-			return nil, fmt.Errorf("sort value 'ASC' 'DESC' only: %v", err)
-		}
+	} else {
+		return nil, fmt.Errorf("sort value 'ASC' 'DESC' only: %v", err)
+	}
 
 	if sortBy.String() == EnumSort.Desc {
-		for i := 0; i < len(products) / 2; i++ {
-			products[i], products[len(products) - 1 - i] = products[len(products) - 1 - i], products[i]
+		for i := 0; i < len(products)/2; i++ {
+			products[i], products[len(products)-1-i] = products[len(products)-1-i], products[i]
 		}
 	}
 
@@ -105,23 +105,22 @@ func (r *mutationResolver) GetAllProductsByKeywordResolver(ctx context.Context, 
 		id := strconv.Itoa(int(p.ID))
 		category := strconv.Itoa(int(p.Category))
 		convertProc = append(convertProc, &model.Product{
-			ID: id,
+			ID:          id,
 			ProductName: p.ProductName,
 			Description: p.Description.String,
-			Img: p.Img.String,
-			UnitPrice: int(p.UnitPrice),
-			Discount: p.Discount,
-			Stock: int(p.Stock),
-			Brand: int(p.BrandID),
-			Category: category,
-			CreatedAt: p.CreatedAt,
-			UpdatedAt: p.UpdatedAt,
+			Img:         p.Img.String,
+			UnitPrice:   int(p.UnitPrice),
+			Discount:    p.Discount,
+			Stock:       int(p.Stock),
+			Brand:       int(p.BrandID),
+			Category:    category,
+			CreatedAt:   p.CreatedAt,
+			UpdatedAt:   p.UpdatedAt,
 		})
 	}
 
 	return convertProc, nil
 }
-
 
 // query
 
@@ -142,10 +141,10 @@ func (r *Resolver) GetAllProductsByCategoryResolver(ctx context.Context, categor
 	}
 
 	// change necessary
-	args := db.ListProductByCategoryParams {
+	args := db.ListProductByCategoryParams{
 		Category: category,
-		Limit: int32(first),
-		Offset: int32(skip),
+		Limit:    int32(first),
+		Offset:   int32(skip),
 	}
 
 	products, err := r.store.ListProductByCategory(gc, args)
@@ -158,20 +157,19 @@ func (r *Resolver) GetAllProductsByCategoryResolver(ctx context.Context, categor
 		id := strconv.Itoa(int(p.ID))
 		category := strconv.Itoa(int(p.Category))
 		convertProc = append(convertProc, &model.Product{
-			ID: id,
+			ID:          id,
 			ProductName: p.ProductName,
 			Description: p.Description.String,
-			Img: p.Img.String,
-			UnitPrice: int(p.UnitPrice),
-			Discount: p.Discount,
-			Stock: int(p.Stock),
-			Brand: int(p.BrandID),
-			Category: category,
-			CreatedAt: p.CreatedAt,
-			UpdatedAt: p.UpdatedAt,
+			Img:         p.Img.String,
+			UnitPrice:   int(p.UnitPrice),
+			Discount:    p.Discount,
+			Stock:       int(p.Stock),
+			Brand:       int(p.BrandID),
+			Category:    category,
+			CreatedAt:   p.CreatedAt,
+			UpdatedAt:   p.UpdatedAt,
 		})
 	}
 
 	return convertProc, nil
 }
-
