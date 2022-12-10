@@ -12,19 +12,25 @@ add cart
 cart duplicate value -> distinct clause -> count
     on hold -> duplicate OK
 
-foreign API
+docker compose
+docker file
+ok
 
 g-gram, morphological analysis
+ on hold
 
 grpc
 
 postgres index
 
-docker compose
-docker file
+sql migration
+sqlc
+create db
+
+github actions CI test
 aws
 terraform
-github actions CI test
+
 
 single test
 merge test

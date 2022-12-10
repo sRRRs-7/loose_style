@@ -18,6 +18,8 @@ services:
     container_name: redis
     ports:
       - 6379:6379
+    depends_on:
+      - postgres
     volumes:
       - ./data/redis:/data
   api:
@@ -28,9 +30,12 @@ services:
     links:
       - postgres:postgres
       - redis:redis
-    ports:
-      - 8080:8080
     depends_on:
       - postgres
       - redis
+    ports:
+      - 8080:8080
+    environment:
+      - DB_SOURCE=postgresql://root:secret@postgres:5432/loose_style?sslmode=disable
+    entrypoint: ["/app/start.sh"]
     command: ["/app/main"]
